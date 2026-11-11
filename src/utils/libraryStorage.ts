@@ -1,5 +1,4 @@
-
-import type { Song } from "../data/songs";
+import { Song } from "../types";
 
 export interface Playlist {
   id: string;

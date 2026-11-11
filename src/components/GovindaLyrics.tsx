@@ -158,8 +158,6 @@ export default function GovindaLyrics({
   onPrivacyClick,
 }: GovindaLyricsProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
-
-  const [playing, setPlaying] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
 
@@ -397,7 +395,7 @@ export default function GovindaLyrics({
       <section className="lyrics-list">
         {showFavorites ? (
           favorites.length > 0 ? (
-            favorites.map((name, index) => (
+            favorites.map((name) => (
               <article className="lyrics-card" key={name}>
                 <p className="names-lines">
                   <span>{name}</span>
