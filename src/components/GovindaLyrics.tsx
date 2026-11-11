@@ -1,5 +1,5 @@
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Menu,
@@ -10,6 +10,8 @@ import {
   Star,
   LayoutGrid,
   LockKeyhole,
+  Heart,
+  ArrowLeft,
 } from "lucide-react";
 
 const names = [
@@ -126,7 +128,6 @@ const names = [
 const chorus =
   "గోవిందా గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
 
-// Replace these example URLs with your actual links.
 const APP_URL = "https://your-actual-app-url.com";
 
 const RATE_URL =
@@ -134,7 +135,9 @@ const RATE_URL =
 
 const MORE_APPS_URL =
   "https://play.google.com/store/apps/developer?id=YOUR_DEVELOPER_ID";
-  
+
+const FAVORITES_STORAGE_KEY = "govinda-namalu-favorites";
+
 function createStanzas() {
   const stanzas: string[][] = [];
 
@@ -155,11 +158,42 @@ export default function GovindaLyrics({
   onPrivacyClick,
 }: GovindaLyricsProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+
   const [playing, setPlaying] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(FAVORITES_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const stanzas = createStanzas();
 
+  // Save favorites whenever they change
+  useEffect(() => {
+    localStorage.setItem(
+      FAVORITES_STORAGE_KEY,
+      JSON.stringify(favorites)
+    );
+  }, [favorites]);
+
+  // Add or remove a favorite
+  const toggleFavorite = (name: string) => {
+    setFavorites((previous) => {
+      if (previous.includes(name)) {
+        return previous.filter((item) => item !== name);
+      }
+
+      return [...previous, name];
+    });
+  };
+
+  // Play song
   const playSong = async () => {
     if (!audioRef.current) return;
 
@@ -171,6 +205,7 @@ export default function GovindaLyrics({
     }
   };
 
+  // Stop song
   const stopSong = () => {
     if (!audioRef.current) return;
 
@@ -179,6 +214,7 @@ export default function GovindaLyrics({
     setPlaying(false);
   };
 
+  // Share app
   const shareApp = async () => {
     const shareData = {
       title: "Govinda Namalu",
@@ -200,6 +236,7 @@ export default function GovindaLyrics({
     }
   };
 
+  // Open external pages
   const openPage = (url: string) => {
     if (
       !url ||
@@ -213,6 +250,18 @@ export default function GovindaLyrics({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  // Open favorites page
+  const openFavorites = () => {
+    setShowFavorites(true);
+    setMenuOpen(false);
+  };
+
+  // Open home page
+  const openHome = () => {
+    setShowFavorites(false);
+    setMenuOpen(false);
+  };
+
   return (
     <main className="govinda-app">
       <audio
@@ -221,8 +270,6 @@ export default function GovindaLyrics({
         preload="metadata"
         onEnded={() => setPlaying(false)}
       />
-
-      
 
       {/* App toolbar */}
       <header className="app-header">
@@ -234,26 +281,40 @@ export default function GovindaLyrics({
           <Menu size={37} strokeWidth={2} />
         </button>
 
-        <h1>Govinda Namalu</h1>
+        <h1>
+          {showFavorites ? "My Favorites" : "Govinda Namalu"}
+        </h1>
 
-        <button
-          className="circle-control"
-          onClick={playSong}
-          aria-label="Play"
-        >
-          <Play size={27} fill="white" />
-        </button>
+        {showFavorites ? (
+          <button
+            className="circle-control"
+            onClick={openHome}
+            aria-label="Back to Home"
+          >
+            <ArrowLeft size={25} />
+          </button>
+        ) : (
+          <>
+            <button
+              className="circle-control"
+              onClick={playSong}
+              aria-label="Play"
+            >
+              <Play size={27} fill="white" />
+            </button>
 
-        <button
-          className="circle-control"
-          onClick={stopSong}
-          aria-label="Stop"
-        >
-          <Square size={21} fill="white" />
-        </button>
+            <button
+              className="circle-control"
+              onClick={stopSong}
+              aria-label="Stop"
+            >
+              <Square size={21} fill="white" />
+            </button>
+          </>
+        )}
       </header>
 
-      {/* Screenshot-style left navigation drawer */}
+      {/* Navigation drawer */}
       {menuOpen && (
         <div className="drawer-layer">
           <div
@@ -271,16 +332,31 @@ export default function GovindaLyrics({
 
             <nav className="drawer-menu">
               <button
-                className="drawer-item selected"
-                onClick={() => setMenuOpen(false)}
+                className={`drawer-item ${
+                  !showFavorites ? "selected" : ""
+                }`}
+                onClick={openHome}
               >
                 <Home size={35} fill="currentColor" />
                 <span>Home</span>
               </button>
 
               <button
+                className={`drawer-item ${
+                  showFavorites ? "selected" : ""
+                }`}
+                onClick={openFavorites}
+              >
+                <Heart size={35} />
+                <span>My Favorites ({favorites.length})</span>
+              </button>
+
+              <button
                 className="drawer-item"
-                onClick={shareApp}
+                onClick={() => {
+                  setMenuOpen(false);
+                  shareApp();
+                }}
               >
                 <Share2 size={35} />
                 <span>Share</span>
@@ -302,37 +378,101 @@ export default function GovindaLyrics({
                 <span>More Apps</span>
               </button>
 
-             <button
-  className="drawer-item"
-  onClick={() => {
-    setMenuOpen(false);
-    onPrivacyClick?.();
-  }}
->
-  <LockKeyhole size={35} />
-  <span>Privacy Policy</span>
-</button>
+              <button
+                className="drawer-item"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onPrivacyClick?.();
+                }}
+              >
+                <LockKeyhole size={35} />
+                <span>Privacy Policy</span>
+              </button>
             </nav>
           </aside>
         </div>
       )}
 
-      {/* Lyrics cards */}
+      {/* Lyrics section */}
       <section className="lyrics-list">
-        {stanzas.map((stanza, index) => (
-          <article className="lyrics-card" key={index}>
-            <p className="names-lines">
-              {stanza.map((name, i) => (
-                <span key={i}>{name} </span>
-              ))}
-            </p>
+        {showFavorites ? (
+          favorites.length > 0 ? (
+            favorites.map((name, index) => (
+              <article className="lyrics-card" key={name}>
+                <p className="names-lines">
+                  <span>{name}</span>
 
-            <p className="chorus-line">{chorus}</p>
-          </article>
-        ))}
+                  <button
+                    className="favorite-button active"
+                    onClick={() => toggleFavorite(name)}
+                    aria-label={`Remove ${name} from favorites`}
+                  >
+                    <Heart
+                      size={23}
+                      fill="currentColor"
+                    />
+                  </button>
+                </p>
+
+                <p className="chorus-line">{chorus}</p>
+              </article>
+            ))
+          ) : (
+            <div className="empty-favorites">
+              <Heart size={55} />
+              <h2>No Favorites Yet</h2>
+              <p>
+                Tap the heart icon beside any Govinda Namalu
+                to save it here.
+              </p>
+
+              <button onClick={openHome}>
+                Explore Govinda Namalu
+              </button>
+            </div>
+          )
+        ) : (
+          stanzas.map((stanza, index) => (
+            <article className="lyrics-card" key={index}>
+              <p className="names-lines">
+                {stanza.map((name) => (
+                  <span
+                    key={name}
+                    className="namalu-item"
+                  >
+                    <span>{name}</span>
+
+                    <button
+                      className={`favorite-button ${
+                        favorites.includes(name) ? "active" : ""
+                      }`}
+                      onClick={() => toggleFavorite(name)}
+                      aria-label={
+                        favorites.includes(name)
+                          ? `Remove ${name} from favorites`
+                          : `Add ${name} to favorites`
+                      }
+                    >
+                      <Heart
+                        size={21}
+                        fill={
+                          favorites.includes(name)
+                            ? "currentColor"
+                            : "none"
+                        }
+                      />
+                    </button>
+                  </span>
+                ))}
+              </p>
+
+              <p className="chorus-line">{chorus}</p>
+            </article>
+          ))
+        )}
       </section>
 
-      {/* Android navigation bar */}
+      {/* Android-style navigation bar */}
       <div className="android-navigation">
         <div className="navigation-handle" />
       </div>

@@ -407,3 +407,80 @@ body {
     font-size: 20px;
   }
 }
+
+/* Individual Govinda Namalu */
+.namalu-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 8px 4px 0;
+}
+
+/* Favorite button */
+.favorite-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+  padding: 5px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-transition: 0.2s ease;
+  -moz-transition: 0.2s ease;
+  -ms-transition: 0.2s ease;
+  -o-transition: 0.2s ease;
+  transition: 0.2s ease;
+}
+
+.favorite-button:hover {
+  -webkit-transform: scale(1.15);
+  -moz-transform: scale(1.15);
+  -ms-transform: scale(1.15);
+  -o-transform: scale(1.15);
+  transform: scale(1.15);
+}
+
+.favorite-button.active {
+  color: #e53935;
+}
+
+/* Empty favorites */
+.empty-favorites {
+  text-align: center;
+  padding: 45px 20px;
+}
+
+.empty-favorites svg {
+  color: #e53935;
+}
+
+.empty-favorites h2 {
+  margin: 15px 0 8px;
+}
+
+.empty-favorites p {
+  line-height: 1.6;
+}
+
+.empty-favorites button {
+  margin-top: 15px;
+  padding: 12px 22px;
+  border: none;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+/* Keep lyrics readable */
+.names-lines {
+  line-height: 2;
+}
