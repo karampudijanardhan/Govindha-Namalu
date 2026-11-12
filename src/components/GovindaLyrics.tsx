@@ -681,7 +681,7 @@ export default function GovindaLyrics({
         <NowPlaying
           songs={playerSongs}
           songIndex={songIndex}
-          audioRef={audioRef}
+          
           playing={playing}
           currentTime={currentTime}
           duration={duration}

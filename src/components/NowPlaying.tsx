@@ -1,5 +1,4 @@
 
-import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   Bell,
@@ -18,31 +17,31 @@ export interface PlayerSong {
 
 interface NowPlayingProps {
   songs: PlayerSong[];
-  initialIndex?: number;
-  requestId: number;
+  songIndex: number;
+  playing: boolean;
+  currentTime: number;
+  duration: number;
+  muted: boolean;
   onBack: () => void;
+  onTogglePlay: () => void;
+  onChangeSong: (direction: number) => void;
+  onSeek: (time: number) => void;
+  onToggleMute: () => void;
 }
 
 export default function NowPlaying({
   songs,
-  initialIndex = 0,
-  requestId,
+  songIndex,
+  playing,
+  currentTime,
+  duration,
+  muted,
   onBack,
+  onTogglePlay,
+  onChangeSong,
+  onSeek,
+  onToggleMute,
 }: NowPlayingProps) {
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  // Prevent duplicate initialization in React StrictMode.
-  const lastRequestIdRef = useRef<number | null>(null);
-
-  // Identify the latest playback request.
-  const playAttemptRef = useRef(0);
-
-  const [songIndex, setSongIndex] = useState(initialIndex);
-  const [playing, setPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [muted, setMuted] = useState(false);
-
   const song = songs[songIndex];
 
   const formatTime = (time: number) => {
@@ -52,147 +51,6 @@ export default function NowPlaying({
     const seconds = Math.floor(time % 60);
 
     return `${minutes}:${String(seconds).padStart(2, "0")}`;
-  };
-
-  // Load and play the selected song.
-  const loadSong = (index: number, autoplay: boolean) => {
-    const audio = audioRef.current;
-    const selectedSong = songs[index];
-
-    if (!audio || !selectedSong) {
-      console.error("Selected song is not available:", index);
-      return;
-    }
-
-    // Invalidate any previous playback attempt.
-    const currentAttempt = ++playAttemptRef.current;
-
-    setSongIndex(index);
-    setCurrentTime(0);
-    setDuration(0);
-    setPlaying(false);
-
-    // Stop the previous song before loading the new one.
-    audio.pause();
-    audio.removeAttribute("src");
-    audio.load();
-
-    // Load the selected audio file.
-    audio.src = selectedSong.src;
-    audio.load();
-
-    if (!autoplay) return;
-
-    // Start playback and handle errors safely.
-    audio
-      .play()
-      .then(() => {
-        if (currentAttempt === playAttemptRef.current) {
-          setPlaying(true);
-        }
-      })
-      .catch((error: unknown) => {
-        // Ignore interrupted requests caused by a newer song selection.
-        if (
-          error instanceof DOMException &&
-          error.name === "AbortError"
-        ) {
-          return;
-        }
-
-        if (currentAttempt !== playAttemptRef.current) return;
-
-        setPlaying(false);
-
-        console.error("Audio playback failed:", {
-          song: selectedSong.title,
-          source: selectedSong.src,
-          error,
-        });
-      });
-  };
-
-  // Initialize playback when a new menu selection arrives.
-  useEffect(() => {
-    if (requestId === 0) return;
-
-    // React StrictMode can run this effect twice in development.
-    if (lastRequestIdRef.current === requestId) return;
-
-    lastRequestIdRef.current = requestId;
-
-    loadSong(initialIndex, true);
-
-    // loadSong intentionally uses the latest props for this request.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestId]);
-
-  // Play or pause the current song.
-  const togglePlay = async () => {
-    const audio = audioRef.current;
-
-    if (!audio) return;
-
-    if (audio.paused) {
-      const currentAttempt = ++playAttemptRef.current;
-
-      try {
-        await audio.play();
-
-        if (currentAttempt === playAttemptRef.current) {
-          setPlaying(true);
-        }
-      } catch (error: unknown) {
-        if (
-          error instanceof DOMException &&
-          error.name === "AbortError"
-        ) {
-          return;
-        }
-
-        if (currentAttempt !== playAttemptRef.current) return;
-
-        setPlaying(false);
-        console.error("Unable to play audio:", error);
-      }
-    } else {
-      // Invalidate any pending play request.
-      playAttemptRef.current++;
-
-      audio.pause();
-      setPlaying(false);
-    }
-  };
-
-  // Move to the previous or next song.
-  const changeSong = (direction: number) => {
-    if (songs.length <= 1) return;
-
-    const nextIndex =
-      (songIndex + direction + songs.length) % songs.length;
-
-    loadSong(nextIndex, true);
-  };
-
-  // Seek through the audio.
-  const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-    const audio = audioRef.current;
-
-    if (!audio || !Number.isFinite(value)) return;
-
-    audio.currentTime = value;
-    setCurrentTime(value);
-  };
-
-  // Mute or unmute the audio.
-  const handleMute = () => {
-    const audio = audioRef.current;
-
-    if (!audio) return;
-
-    audio.muted = !audio.muted;
-    setMuted(audio.muted);
   };
 
   if (!song) {
@@ -214,40 +72,6 @@ export default function NowPlaying({
         boxSizing: "border-box",
       }}
     >
-      <audio
-        ref={audioRef}
-        preload="metadata"
-        onTimeUpdate={() => {
-          setCurrentTime(audioRef.current?.currentTime ?? 0);
-        }}
-        onLoadedMetadata={() => {
-          setDuration(audioRef.current?.duration ?? 0);
-        }}
-        onDurationChange={() => {
-          setDuration(audioRef.current?.duration ?? 0);
-        }}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnded={() => {
-          if (songs.length > 1) {
-            changeSong(1);
-          } else {
-            setPlaying(false);
-          }
-        }}
-        onError={() => {
-          const audio = audioRef.current;
-
-          if (!audio) return;
-
-          console.error("Audio file loading error:", {
-            source: audio.currentSrc || audio.src,
-            errorCode: audio.error?.code,
-            errorMessage: audio.error?.message,
-          });
-        }}
-      />
-
       {/* Responsive Header */}
       <header className="z-20 flex h-[clamp(54px,8dvh,72px)] w-full shrink-0 items-center gap-2 bg-[#00796f] px-3 text-white shadow-md sm:gap-3 sm:px-5">
         <button
@@ -301,7 +125,7 @@ export default function NowPlaying({
           />
 
           <button
-            onClick={() => changeSong(-1)}
+            onClick={() => onChangeSong(-1)}
             disabled={songs.length <= 1}
             className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md active:scale-95 disabled:opacity-40 sm:left-5 sm:h-14 sm:w-14"
             aria-label="Previous song"
@@ -310,7 +134,7 @@ export default function NowPlaying({
           </button>
 
           <button
-            onClick={() => changeSong(1)}
+            onClick={() => onChangeSong(1)}
             disabled={songs.length <= 1}
             className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md active:scale-95 disabled:opacity-40 sm:right-5 sm:h-14 sm:w-14"
             aria-label="Next song"
@@ -339,7 +163,7 @@ export default function NowPlaying({
       >
         <div className="mx-auto flex min-h-[62px] w-full max-w-[650px] items-center gap-1.5 rounded-2xl border border-white/70 bg-[#f4f4f4] px-2 shadow-xl sm:min-h-[76px] sm:gap-3 sm:rounded-full sm:px-5">
           <button
-            onClick={togglePlay}
+            onClick={onTogglePlay}
             className="flex h-10 w-9 shrink-0 items-center justify-center text-black active:scale-90 sm:w-11"
             aria-label={playing ? "Pause music" : "Play music"}
           >
@@ -360,7 +184,7 @@ export default function NowPlaying({
             max={duration || 1}
             step={0.1}
             value={Math.min(currentTime, duration || 1)}
-            onChange={handleSeek}
+            onChange={(event) => onSeek(Number(event.target.value))}
             style={{
               background: `linear-gradient(to right, #00796f ${progress}%, #bdbdbd ${progress}%)`,
             }}
@@ -373,7 +197,7 @@ export default function NowPlaying({
           </span>
 
           <button
-            onClick={handleMute}
+            onClick={onToggleMute}
             className="flex h-10 w-9 shrink-0 items-center justify-center text-black active:scale-90 sm:w-11"
             aria-label={muted ? "Unmute" : "Mute"}
           >
