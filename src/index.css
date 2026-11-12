@@ -23,16 +23,21 @@ body,
   min-height: 100%;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: "Noto Sans Telugu", sans-serif;
   background: #afd0d2;
+  overflow-x: hidden;
 }
 
 .govinda-app {
   min-height: 100vh;
   width: 100%;
   background: #afd0d2;
-  padding-bottom: 45px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* =========================================
@@ -40,64 +45,60 @@ body {
 ========================================= */
 
 .status-bar {
-  height: 72px;
+  height: clamp(40px, 7dvh, 65px);
   width: 100%;
-  padding: 0 8%;
+  padding: 0 clamp(10px, 4vw, 40px);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 6px;
   background: #ff9f00;
   color: #fff;
   font-family: Arial, sans-serif;
-  font-size: 24px;
+  font-size: clamp(13px, 2vw, 20px);
 }
 
 .status-center {
-  font-size: 20px;
+  font-size: clamp(12px, 1.8vw, 18px);
 }
 
 .status-right {
-  font-size: 19px;
+  font-size: clamp(11px, 1.7vw, 17px);
   white-space: nowrap;
 }
 
 /* =========================================
-   YELLOW APP HEADER
-   Updated to match first screenshot
+   APP HEADER
 ========================================= */
 
 .app-header {
-  height: 86px;
-  min-height: 86px;
+  height: clamp(58px, 9dvh, 76px);
+  min-height: 58px;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  gap: 12px;
-  padding: 0 22px;
-
+  gap: clamp(5px, 1.5vw, 14px);
+  padding: 0 clamp(8px, 3vw, 24px);
   background: #ffc107;
   color: #fff;
-
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
-
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
 .app-header h1 {
+  min-width: 0;
   flex: 1;
   margin: 0;
-
   text-align: center;
   font-family: Arial, sans-serif;
-
-  font-size: clamp(21px, 4vw, 30px);
+  font-size: clamp(16px, 2.5vw, 26px);
   font-weight: 600;
-
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -106,11 +107,9 @@ body {
 .menu-button,
 .circle-control {
   flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   background: transparent;
   color: #fff;
@@ -122,15 +121,14 @@ body {
 }
 
 .menu-button svg {
-  width: 32px;
-  height: 32px;
+  width: clamp(23px, 3vw, 30px);
+  height: clamp(23px, 3vw, 30px);
 }
 
 .circle-control {
-  width: 50px;
-  height: 50px;
-
-  border: 4px solid #fff;
+  width: clamp(38px, 6vw, 48px);
+  height: clamp(38px, 6vw, 48px);
+  border: 3px solid #fff;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -147,77 +145,65 @@ body {
   top: 100px;
   left: 12px;
   z-index: 30;
-
   width: 230px;
   padding: 12px;
-
   background: #f7f6fc;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   -ms-border-radius: 15px;
   -o-border-radius: 15px;
   border-radius: 15px;
-
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
 }
 
 .menu-panel button {
   display: block;
   width: 100%;
-
   border: none;
   background: transparent;
-
   padding: 13px;
-
   text-align: left;
   color: #669f62;
   font-size: 16px;
-
   cursor: pointer;
 }
 
 /* =========================================
    LYRICS LIST
-   Compact card spacing
 ========================================= */
 
 .lyrics-list {
   display: flex;
   flex-direction: column;
-
   gap: 7px;
   padding: 4px 3px 15px;
 }
 
 /* =========================================
    LYRICS CARDS
-   Updated to match first screenshot
 ========================================= */
 
 .lyrics-card {
-  width: 100%;
-
+  width: 96%;
+  max-width: 900px;
   min-height: 0;
   height: auto;
-
-  padding: 17px 16px;
-
-  -webkit-border-radius: 28px;
-  -moz-border-radius: 28px;
-  -ms-border-radius: 28px;
-  -o-border-radius: 28px;
-  border-radius: 28px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px 14px;
+  -webkit-border-radius: 26px;
+  -moz-border-radius: 26px;
+  -ms-border-radius: 26px;
+  -o-border-radius: 26px;
+  border-radius: 26px;
   background: #f7f6fc;
-
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   text-align: center;
+  box-sizing: border-box;
 }
 
 /* =========================================
@@ -227,15 +213,13 @@ body {
 .names-lines,
 .chorus-line {
   width: 100%;
-
   color: #6f9f6b;
   font-family: "Noto Sans Telugu", sans-serif;
-
-  font-size: clamp(22px, 4.4vw, 27px);
+  font-size: 20px;
   font-weight: 500;
-
-  line-height: 1.28;
+  line-height: 1.4;
   text-align: center;
+  overflow-wrap: break-word;
 }
 
 .names-lines {
@@ -261,7 +245,6 @@ body {
 .namalu-item {
   display: inline;
   align-items: initial;
-
   gap: 0;
   margin: 0 5px 0 0;
   padding: 0;
@@ -273,21 +256,17 @@ body {
 
 /* =========================================
    FAVORITE BUTTON
-   Retained for Favorites screen
 ========================================= */
 
 .favorite-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   background: transparent;
-
   color: #777;
   cursor: pointer;
   padding: 5px;
-
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -336,7 +315,6 @@ body {
 .empty-favorites button {
   margin-top: 15px;
   padding: 12px 22px;
-
   border: none;
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
@@ -347,36 +325,13 @@ body {
 }
 
 /* =========================================
-   ANDROID BOTTOM NAVIGATION
+   ANDROID NAVIGATION
+   Use the real Android system navigation bar.
 ========================================= */
 
-.android-navigation {
-  height: 35px;
-  width: 100%;
-
-  position: fixed;
-  bottom: 0;
-  left: 0;
-
-  z-index: 50;
-
-  background: #000;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+.android-navigation,
 .navigation-handle {
-  width: 108px;
-  height: 5px;
-
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -ms-border-radius: 20px;
-  -o-border-radius: 20px;
-  border-radius: 20px;
-  background: #929292;
+  display: none !important;
 }
 
 /* =========================================
@@ -399,16 +354,12 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  bottom: 35px;
-
+  bottom: 0;
   width: 78%;
   max-width: 580px;
-
   background: #fafafa;
   overflow-y: auto;
-
   box-shadow: 5px 0 20px rgba(0, 0, 0, 0.18);
-
   -webkit-animation: drawerSlide 0.25s ease-out;
   animation: drawerSlide 0.25s ease-out;
 }
@@ -416,7 +367,6 @@ body {
 .drawer-banner {
   width: 100%;
   height: 270px;
-
   background: #ffc107;
   overflow: hidden;
 }
@@ -424,7 +374,6 @@ body {
 .drawer-banner img {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
   display: block;
 }
@@ -436,21 +385,16 @@ body {
 .drawer-item {
   width: 100%;
   height: 100px;
-
   padding: 0 35px;
-
   display: flex;
   align-items: center;
   gap: 70px;
-
   border: none;
   background: #fafafa;
-
   color: #252525;
   font-family: Arial, sans-serif;
   font-size: 27px;
   font-weight: 500;
-
   text-align: left;
   cursor: pointer;
 }
@@ -473,7 +417,9 @@ body {
   background: #eeeeee;
 }
 
-/* Drawer animation */
+/* =========================================
+   DRAWER ANIMATION
+========================================= */
 
 @keyframes drawerSlide {
   from {
@@ -498,11 +444,7 @@ body {
 ========================================= */
 
 @media (max-width: 600px) {
-
   .app-header {
-    height: 86px;
-    min-height: 86px;
-
     padding: 0 12px;
     gap: 8px;
   }
@@ -517,9 +459,9 @@ body {
   }
 
   .circle-control {
-    width: 49px;
-    height: 49px;
-    border-width: 4px;
+    width: 45px;
+    height: 45px;
+    border-width: 3px;
   }
 
   .lyrics-list {
@@ -528,26 +470,25 @@ body {
   }
 
   .lyrics-card {
+    width: 94%;
     min-height: 0;
-    padding: 17px 14px;
-    -webkit-border-radius: 27px;
-    -moz-border-radius: 27px;
-    -ms-border-radius: 27px;
-    -o-border-radius: 27px;
-    border-radius: 27px;
+    padding: 14px 12px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -ms-border-radius: 25px;
+    -o-border-radius: 25px;
+    border-radius: 25px;
   }
 
   .names-lines,
   .chorus-line {
-    font-size: clamp(21px, 5vw, 26px);
-    line-height: 1.28;
+    font-size: 20px;
+    line-height: 1.4;
   }
 
   .chorus-line {
     margin-top: 3px;
   }
-
-  /* Navigation drawer */
 
   .navigation-drawer {
     width: 78%;
@@ -575,152 +516,6 @@ body {
 ========================================= */
 
 @media (max-width: 380px) {
-
-  .app-header {
-    padding: 0 7px;
-    gap: 5px;
-  }
-
-  .app-header h1 {
-    font-size: 18px;
-  }
-
-  .circle-control {
-    width: 45px;
-    height: 45px;
-    border-width: 3px;
-  }
-
-  .menu-button svg {
-    width: 27px;
-  }
-
-  .lyrics-card {
-    min-height: 0;
-    padding: 15px 11px;
-    -webkit-border-radius: 24px;
-    -moz-border-radius: 24px;
-    -ms-border-radius: 24px;
-    -o-border-radius: 24px;
-    border-radius: 24px;
-  }
-
-  .names-lines,
-  .chorus-line {
-    font-size: 21px;
-    line-height: 1.28;
-  }
-
-  .drawer-item {
-    gap: 30px;
-    padding: 0 20px;
-    font-size: 20px;
-  }
-}
-
-/* =========================================
-   RESPONSIVE TELUGU LYRICS FONT
-========================================= */
-
-/* Desktop and large screens */
-.names-lines,
-.chorus-line {
-  font-size: clamp(17px, 2.2vw, 22px);
-  line-height: 1.5;
-  overflow-wrap: break-word;
-}
-
-/* Tablets and mobile screens */
-@media (max-width: 600px) {
-  .names-lines,
-  .chorus-line {
-    font-size: clamp(1px, 3.5vw, 19px);
-    line-height: 1.2;
-  }
-
-  .lyrics-card {
-    padding: 14px 12px;
-  }
-}
-
-/* Small Android phones */
-@media (max-width: 380px) {
-  .names-lines,
-  .chorus-line {
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
-  .lyrics-card {
-    padding: 12px 9px;
-  }
-}
-
-/* Very short screens */
-@media (max-height: 600px) {
-  .names-lines,
-  .chorus-line {
-    font-size: 15px;
-    line-height: 1.4;
-  }
-}
-
-/* =========================================
-   RESPONSIVE APP HEADER
-========================================= */
-
-.app-header {
-  height: clamp(58px, 9dvh, 76px);
-  min-height: 58px;
-  padding: 0 clamp(8px, 3vw, 24px);
-  gap: clamp(5px, 1.5vw, 14px);
-}
-
-.app-header h1 {
-  min-width: 0;
-  flex: 1;
-  font-size: clamp(16px, 2.5vw, 26px);
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.menu-button svg {
-  width: clamp(23px, 3vw, 30px);
-  height: clamp(23px, 3vw, 30px);
-}
-
-.circle-control {
-  width: clamp(38px, 6vw, 48px);
-  height: clamp(38px, 6vw, 48px);
-  border-width: 3px;
-}
-
-/* =========================================
-   RESPONSIVE STATUS BAR
-========================================= */
-
-.status-bar {
-  height: clamp(40px, 7dvh, 65px);
-  padding: 0 clamp(10px, 4vw, 40px);
-  font-size: clamp(13px, 2vw, 20px);
-  gap: 6px;
-}
-
-.status-center {
-  font-size: clamp(12px, 1.8vw, 18px);
-}
-
-.status-right {
-  font-size: clamp(11px, 1.7vw, 17px);
-}
-
-/* =========================================
-   SMALL MOBILE SCREENS
-========================================= */
-
-@media (max-width: 380px) {
   .app-header {
     height: 56px;
     min-height: 56px;
@@ -729,7 +524,7 @@ body {
   }
 
   .app-header h1 {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .menu-button svg {
@@ -741,6 +536,28 @@ body {
     width: 36px;
     height: 36px;
     border-width: 2px;
+  }
+
+  .lyrics-card {
+    width: 92%;
+    padding: 12px 10px;
+    -webkit-border-radius: 23px;
+    -moz-border-radius: 23px;
+    -ms-border-radius: 23px;
+    -o-border-radius: 23px;
+    border-radius: 23px;
+  }
+
+  .names-lines,
+  .chorus-line {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .drawer-item {
+    gap: 30px;
+    padding: 0 20px;
+    font-size: 20px;
   }
 
   .status-bar {
@@ -761,5 +578,17 @@ body {
 
   .app-header h1 {
     font-size: clamp(22px, 2.2vw, 30px);
+  }
+}
+
+/* =========================================
+   VERY SHORT SCREENS
+========================================= */
+
+@media (max-height: 600px) {
+  .names-lines,
+  .chorus-line {
+    font-size: 20px;
+    line-height: 1.35;
   }
 }

@@ -248,8 +248,8 @@ export default function NowPlaying({
       <footer
         className="z-30 w-full shrink-0 px-2 pt-2 sm:px-5 sm:pt-3"
         style={{
-          paddingBottom:
-            "calc(max(env(safe-area-inset-bottom), 24px) + 10px)",
+         paddingBottom:
+  "calc(max(env(safe-area-inset-bottom), 24px) + 10px)",
         }}
       >
         <div className="mx-auto flex min-h-[62px] w-full max-w-[650px] items-center gap-1.5 rounded-2xl border border-white/70 bg-[#f4f4f4] px-2 shadow-xl sm:min-h-[76px] sm:gap-3 sm:rounded-full sm:px-5">
