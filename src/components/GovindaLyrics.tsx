@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Menu,
@@ -128,8 +127,7 @@ const names = [
   "శ్రీ వేంకటేశా గోవిందా",
 ];
 
-const chorus =
-  "గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
+const chorus = "గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
 
 // =========================================
 // SONG TYPES
@@ -144,7 +142,12 @@ type SongCategory =
   | "govinda"
   | "suprabhatam"
   | "stotram"
-  | "annamacharya";
+  | "annamacharya"
+  | "ghantasala"
+  | "om-namo"
+  | "vishnu-sahasranamam"
+  | "garuda-gamana"
+  | "narayana-govinda";
 
 // =========================================
 // SONG CATEGORIES
@@ -239,6 +242,56 @@ const songCategories: {
       },
     ],
   },
+  {
+    id: "ghantasala",
+    title: "Ghantasala Venkateswara Swamy Songs",
+    songs: [
+      {
+        title: "Nama Venkatesha",
+        src: "/audio/GANTASALA ALL TIME Hits.mp3",
+      },
+    ],
+  },
+  {
+    id: "om-namo",
+    title: "Om Namo Venkateshaya",
+    songs: [
+      {
+        title: "Om Namo Venkateshaya",
+        src: "/audio/Om Namo Venkateshaya.mp3",
+      },
+    ],
+  },
+  {
+    id: "vishnu-sahasranamam",
+    title: "Vishnu Sahasranamam",
+    songs: [
+      {
+        title: "Vishnu Sahasranamam",
+        src: "/audio/Vishnu Sahasranamam.mp3",
+      },
+    ],
+  },
+  {
+    id: "garuda-gamana",
+    title: "Garuda Gamana Tava",
+    songs: [
+      {
+        title: "Garuda Gamana Tava",
+        src: "/audio/Garuda Gamana Tava.mp3",
+      },
+    ],
+  },
+  {
+    id: "narayana-govinda",
+    title: "Narayana Narayana Jaya Govinda Hare",
+    songs: [
+      {
+        title: "Narayana Narayana Jaya Govinda Hare",
+        src: "/audio/Narayana Narayana Jaya Govinda Hare.mp3",
+      },
+    ],
+  },
 ];
 
 // =========================================
@@ -248,10 +301,10 @@ const songCategories: {
 const MORE_APPS_URL =
   "https://play.google.com/store/apps/developer?id=YOUR_DEVELOPER_ID";
 
-const FAVORITES_STORAGE_KEY =
-  "govinda-namalu-favorites";
+const FAVORITES_STORAGE_KEY = "govinda-namalu-favorites";
 
 // =========================================
+// LYRICS CARD CREATION
 // FIRST CARD: 4 NAMES
 // REMAINING CARDS: 2 NAMES
 // =========================================
@@ -259,10 +312,8 @@ const FAVORITES_STORAGE_KEY =
 function createStanzas() {
   const stanzas: string[][] = [];
 
-  // First card contains exactly 4 names
   stanzas.push(names.slice(0, 4));
 
-  // All remaining cards contain 2 names
   for (let i = 4; i < names.length; i += 2) {
     stanzas.push(names.slice(i, i + 2));
   }
@@ -285,32 +336,31 @@ interface GovindaLyricsProps {
 export default function GovindaLyrics({
   onPrivacyClick,
 }: GovindaLyricsProps) {
+  // Audio is managed here, not inside NowPlaying.
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const playRequestRef = useRef(0);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [playerVisible, setPlayerVisible] = useState(false);
 
   const [activeCategory, setActiveCategory] =
     useState<SongCategory>("govinda");
-
-  const [nowPlayingIndex, setNowPlayingIndex] =
-    useState<number | null>(null);
 
   const [playerSongs, setPlayerSongs] = useState<Song[]>(
     songCategories[0].songs
   );
 
-  const [playerInitialIndex, setPlayerInitialIndex] =
-    useState(0);
+  const [songIndex, setSongIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const [requestId, setRequestId] = useState(0);
 
-  const [playerRequestId, setPlayerRequestId] =
-    useState(0);
-
-  // Load saved favorites
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem(
-        FAVORITES_STORAGE_KEY
-      );
-
+      const saved = localStorage.getItem(FAVORITES_STORAGE_KEY);
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -320,12 +370,12 @@ export default function GovindaLyrics({
   const stanzas = createStanzas();
 
   const currentCategory = songCategories.find(
-    (category) => category.id === activeCategory
+    (item) => item.id === activeCategory
   );
 
-  const currentSongs = currentCategory?.songs ?? [];
+  const currentSong = playerSongs[songIndex];
 
-  // Save favorites
+  // Save favorites.
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -337,18 +387,80 @@ export default function GovindaLyrics({
     }
   }, [favorites]);
 
-  // Add or remove favorites
-  const toggleFavorite = (name: string) => {
-    setFavorites((previous) => {
-      if (previous.includes(name)) {
-        return previous.filter((item) => item !== name);
-      }
+  // =========================================
+  // AUDIO PLAYBACK
+  // This effect only changes when a new song
+  // is selected. It does not depend on screens.
+  // =========================================
 
-      return [...previous, name];
-    });
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!audio || !currentSong || requestId === 0) {
+      return;
+    }
+
+    const attempt = ++playRequestRef.current;
+
+    audio.pause();
+    audio.src = currentSong.src;
+    audio.load();
+
+    setCurrentTime(0);
+    setDuration(0);
+    setPlaying(false);
+
+    audio
+      .play()
+      .then(() => {
+        if (attempt === playRequestRef.current) {
+          setPlaying(true);
+        }
+      })
+      .catch((error: unknown) => {
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        if (attempt !== playRequestRef.current) {
+          return;
+        }
+
+        setPlaying(false);
+
+        console.error("Audio playback failed:", {
+          title: currentSong.title,
+          src: currentSong.src,
+          error,
+        });
+      });
+
+    // Important:
+    // Do not pause audio in this effect's cleanup.
+    // Switching screens must not stop music.
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestId]);
+
+  // =========================================
+  // FAVORITES
+  // =========================================
+
+  const toggleFavorite = (name: string) => {
+    setFavorites((previous) =>
+      previous.includes(name)
+        ? previous.filter((item) => item !== name)
+        : [...previous, name]
+    );
   };
 
-  // Select category
+  // =========================================
+  // SELECT CATEGORY
+  // =========================================
+
   const selectCategory = (category: SongCategory) => {
     const selected = songCategories.find(
       (item) => item.id === category
@@ -360,36 +472,146 @@ export default function GovindaLyrics({
     setShowFavorites(false);
     setMenuOpen(false);
 
+    // Govinda Namalu opens the lyrics screen.
+    // Existing background audio is not stopped.
     if (category === "govinda") {
-      setNowPlayingIndex(null);
+      setPlayerVisible(false);
+      return;
+    }
+
+    setPlayerSongs(selected.songs);
+    setSongIndex(0);
+    setPlayerVisible(true);
+
+    // Request a new song.
+    setRequestId((previous) => previous + 1);
+  };
+
+  // =========================================
+  // OPEN SONG PLAYER
+  // =========================================
+
+  const openSongPlayer = (songs: Song[], index: number) => {
+    if (index < 0 || index >= songs.length) return;
+
+    setPlayerSongs(songs);
+    setSongIndex(index);
+    setPlayerVisible(true);
+    setShowFavorites(false);
+    setMenuOpen(false);
+
+    setRequestId((previous) => previous + 1);
+  };
+
+  // =========================================
+  // NEXT / PREVIOUS SONG
+  // =========================================
+
+  const changeSong = (direction: number) => {
+    if (playerSongs.length <= 1) return;
+
+    const next =
+      (songIndex + direction + playerSongs.length) %
+      playerSongs.length;
+
+    setSongIndex(next);
+    setRequestId((previous) => previous + 1);
+  };
+
+  // =========================================
+  // PLAY / PAUSE
+  // =========================================
+
+  const togglePlay = async () => {
+    const audio = audioRef.current;
+
+    if (!audio) return;
+
+    if (audio.paused) {
+      const attempt = ++playRequestRef.current;
+
+      try {
+        await audio.play();
+
+        if (attempt === playRequestRef.current) {
+          setPlaying(true);
+        }
+      } catch (error) {
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        console.error("Unable to play audio:", error);
+        setPlaying(false);
+      }
     } else {
-      setPlayerSongs(selected.songs);
-      setPlayerInitialIndex(0);
-      setNowPlayingIndex(0);
-      setPlayerRequestId((previous) => previous + 1);
+      playRequestRef.current++;
+
+      audio.pause();
+      setPlaying(false);
     }
   };
 
-  // Open selected song player
-  const openSongPlayer = (index: number) => {
-    if (index < 0 || index >= currentSongs.length) return;
+  // =========================================
+  // SEEK AUDIO
+  // =========================================
 
-    setPlayerSongs(currentSongs);
-    setPlayerInitialIndex(index);
-    setNowPlayingIndex(index);
-    setPlayerRequestId((previous) => previous + 1);
+  const handleSeek = (time: number) => {
+    const audio = audioRef.current;
 
-    setShowFavorites(false);
-    setMenuOpen(false);
+    if (!audio || !Number.isFinite(time)) return;
+
+    audio.currentTime = time;
+    setCurrentTime(time);
   };
 
-  // Open external page
+  // =========================================
+  // MUTE / UNMUTE
+  // =========================================
+
+  const toggleMute = () => {
+    const audio = audioRef.current;
+
+    if (!audio) return;
+
+    audio.muted = !audio.muted;
+    setMuted(audio.muted);
+  };
+
+  // =========================================
+  // FAVORITES SCREEN
+  // =========================================
+
+  const openFavorites = () => {
+    setShowFavorites(true);
+    setPlayerVisible(false);
+    setMenuOpen(false);
+
+    // Do not pause audio here.
+  };
+
+  // =========================================
+  // HOME SCREEN
+  // =========================================
+
+  const openHome = () => {
+    setActiveCategory("govinda");
+    setShowFavorites(false);
+    setPlayerVisible(false);
+    setMenuOpen(false);
+
+    // Do not pause audio here.
+  };
+
+  // =========================================
+  // OPEN EXTERNAL PAGE
+  // =========================================
+
   const openPage = (url: string) => {
-    if (
-      !url ||
-      url.includes("YOUR_") ||
-      url.includes("your-")
-    ) {
+    if (!url || url.includes("YOUR_") || url.includes("your-")) {
       alert("Please configure this link first.");
       return;
     }
@@ -397,91 +619,206 @@ export default function GovindaLyrics({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Favorites page
-  const openFavorites = () => {
-    setShowFavorites(true);
-    setMenuOpen(false);
-    setNowPlayingIndex(null);
+  // =========================================
+  // WHEN SONG ENDS
+  // =========================================
+
+  const handleAudioEnded = () => {
+    if (playerSongs.length > 1) {
+      changeSong(1);
+    } else {
+      setPlaying(false);
+    }
   };
 
-  // Home page
-  const openHome = () => {
-    setActiveCategory("govinda");
-    setShowFavorites(false);
-    setNowPlayingIndex(null);
-    setMenuOpen(false);
-  };
+  // =========================================
+  // RENDER
+  // =========================================
 
   return (
-    <main className="govinda-app">
+    <div className="relative min-h-screen w-full">
 
-      {/* PERSISTENT AUDIO PLAYER */}
+      {/* =====================================
+          PERSISTENT AUDIO ELEMENT
+          Keep this outside NowPlaying.
+          Do not conditionally render this.
+      ===================================== */}
 
-      <div
-        className={
-          nowPlayingIndex !== null
-            ? "fixed inset-0 z-50 block"
-            : "hidden"
+      <audio
+        ref={audioRef}
+        preload="metadata"
+        onTimeUpdate={() =>
+          setCurrentTime(audioRef.current?.currentTime ?? 0)
         }
-      >
+        onLoadedMetadata={() =>
+          setDuration(audioRef.current?.duration ?? 0)
+        }
+        onDurationChange={() =>
+          setDuration(audioRef.current?.duration ?? 0)
+        }
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={handleAudioEnded}
+        onError={() => {
+          const audio = audioRef.current;
+
+          if (audio?.error) {
+            console.error(
+              "Audio file error:",
+              audio.currentSrc,
+              audio.error.code,
+              audio.error.message
+            );
+          }
+        }}
+      />
+
+      {/* =====================================
+          PLAYER OR LYRICS SCREEN
+      ===================================== */}
+
+      {playerVisible && currentSong ? (
         <NowPlaying
           songs={playerSongs}
-          initialIndex={playerInitialIndex}
-          requestId={playerRequestId}
-          onBack={() => {
-            setNowPlayingIndex(null);
-            setShowFavorites(false);
-            setMenuOpen(true);
-          }}
+          songIndex={songIndex}
+          audioRef={audioRef}
+          playing={playing}
+          currentTime={currentTime}
+          duration={duration}
+          muted={muted}
+          onBack={() => setMenuOpen(true)}
+          onTogglePlay={togglePlay}
+          onChangeSong={changeSong}
+          onSeek={handleSeek}
+          onToggleMute={toggleMute}
         />
-      </div>
+      ) : (
+        <main className="govinda-app">
 
-      {/* APP TOOLBAR */}
+          {/* HEADER */}
 
-      <header className="app-header">
-        <button
-          className="menu-button"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Open menu"
-        >
-          <Menu size={37} strokeWidth={2} />
-        </button>
+          <header className="app-header">
+            <button
+              className="menu-button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu size={37} strokeWidth={2} />
+            </button>
 
-        <h1>
-          {showFavorites
-            ? "My Favorites"
-            : currentCategory?.title}
-        </h1>
+            <h1>
+              {showFavorites
+                ? "My Favorites"
+                : currentCategory?.title}
+            </h1>
 
-        {showFavorites ? (
-          <button
-            className="circle-control"
-            onClick={openHome}
-            aria-label="Back to Home"
-          >
-            <ArrowLeft size={25} />
-          </button>
-        ) : activeCategory === "govinda" ? (
-          <button
-            className="circle-control"
-            onClick={() => openSongPlayer(0)}
-            aria-label="Play Govinda Namalu"
-          >
-            <Play size={27} fill="white" />
-          </button>
-        ) : null}
-      </header>
+            {showFavorites ? (
+              <button
+                className="circle-control"
+                onClick={openHome}
+                aria-label="Back to Home"
+              >
+                <ArrowLeft size={25} />
+              </button>
+            ) : activeCategory === "govinda" ? (
+              <button
+                className="circle-control"
+                onClick={() =>
+                  openSongPlayer(songCategories[0].songs, 0)
+                }
+                aria-label="Play Govinda Namalu"
+              >
+                <Play size={27} fill="white" />
+              </button>
+            ) : null}
+          </header>
 
-      {/* NAVIGATION DRAWER */}
+          {/* =================================
+              LYRICS AND FAVORITES
+          ================================= */}
+
+          <section className="lyrics-list">
+
+            {showFavorites ? (
+              favorites.length ? (
+                favorites.map((name) => (
+                  <article className="lyrics-card" key={name}>
+                    <p className="names-lines">
+                      <span>{name}</span>
+
+                      <button
+                        className="favorite-button active"
+                        onClick={() => toggleFavorite(name)}
+                        aria-label={`Remove ${name} from favorites`}
+                      >
+                        <Heart size={23} fill="currentColor" />
+                      </button>
+                    </p>
+
+                    <p className="chorus-line">{chorus}</p>
+                  </article>
+                ))
+              ) : (
+                <div className="empty-favorites">
+                  <Heart size={55} />
+
+                  <h2>No Favorites Yet</h2>
+
+                  <p>
+                    No favorite Govinda Namalu have been saved yet.
+                  </p>
+
+                  <button onClick={openHome}>
+                    Explore Govinda Namalu
+                  </button>
+                </div>
+              )
+            ) : activeCategory === "govinda" ? (
+              stanzas.map((stanza, index) => (
+                <article className="lyrics-card" key={index}>
+                  <p className="names-lines">
+  {stanza.map((name, nameIndex) => (
+    <span key={nameIndex} className="namalu-item">
+      {name}
+    </span>
+  ))}
+</p>
+
+                  <p className="chorus-line">{chorus}</p>
+                </article>
+              ))
+            ) : null}
+
+          </section>
+
+          <div className="android-navigation">
+            <div className="navigation-handle" />
+          </div>
+        </main>
+      )}
+
+      {/* =====================================
+          NAVIGATION DRAWER
+          Opens over the player.
+          Does not unmount or pause audio.
+      ===================================== */}
 
       {menuOpen && (
-        <div className="drawer-layer">
+        <div
+          className="drawer-layer"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 10000,
+          }}
+        >
           <div
             className="drawer-overlay"
             onClick={() => setMenuOpen(false)}
           />
 
           <aside className="navigation-drawer">
+
             <div className="drawer-banner">
               <img
                 src="/images/venkateswara-banner.jpg"
@@ -490,6 +827,7 @@ export default function GovindaLyrics({
             </div>
 
             <nav className="drawer-menu">
+
               {songCategories.map((category) => (
                 <button
                   key={category.id}
@@ -502,6 +840,7 @@ export default function GovindaLyrics({
                   onClick={() => selectCategory(category.id)}
                 >
                   <Home size={30} />
+
                   <span>{category.title}</span>
                 </button>
               ))}
@@ -513,9 +852,8 @@ export default function GovindaLyrics({
                 onClick={openFavorites}
               >
                 <Heart size={30} />
-                <span>
-                  My Favorites ({favorites.length})
-                </span>
+
+                <span>My Favorites ({favorites.length})</span>
               </button>
 
               <button
@@ -523,6 +861,7 @@ export default function GovindaLyrics({
                 onClick={() => openPage(MORE_APPS_URL)}
               >
                 <LayoutGrid size={30} />
+
                 <span>More Apps</span>
               </button>
 
@@ -534,89 +873,25 @@ export default function GovindaLyrics({
                 }}
               >
                 <LockKeyhole size={30} />
+
                 <span>Privacy Policy</span>
               </button>
+
+              {playerVisible && (
+                <button
+                  className="drawer-item"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <Play size={30} />
+
+                  <span>Return to Now Playing</span>
+                </button>
+              )}
+
             </nav>
           </aside>
         </div>
       )}
-
-      {/* LYRICS SECTION */}
-
-      <section className="lyrics-list">
-        {showFavorites ? (
-          favorites.length > 0 ? (
-            favorites.map((name) => (
-              <article
-                className="lyrics-card"
-                key={name}
-              >
-                <p className="names-lines">
-                  <span>{name}</span>
-
-                  <button
-                    className="favorite-button active"
-                    onClick={() => toggleFavorite(name)}
-                    aria-label={`Remove ${name} from favorites`}
-                  >
-                    <Heart
-                      size={23}
-                      fill="currentColor"
-                    />
-                  </button>
-                </p>
-
-                <p className="chorus-line">
-                  {chorus}
-                </p>
-              </article>
-            ))
-          ) : (
-            <div className="empty-favorites">
-              <Heart size={55} />
-
-              <h2>No Favorites Yet</h2>
-
-              <p>
-                No favorite Govinda Namalu have been saved yet.
-              </p>
-
-              <button onClick={openHome}>
-                Explore Govinda Namalu
-              </button>
-            </div>
-          )
-        ) : activeCategory === "govinda" ? (
-          stanzas.map((stanza, index) => (
-            <article
-              className="lyrics-card"
-              key={index}
-            >
-              <p className="names-lines">
-                {stanza.map((name, nameIndex) => (
-                  <span
-                    key={nameIndex}
-                    className="namalu-item"
-                  >
-                    {name}{" "}
-                  </span>
-                ))}
-              </p>
-
-              <p className="chorus-line">
-                {chorus}
-              </p>
-            </article>
-          ))
-        ) : null}
-      </section>
-
-      {/* ANDROID NAVIGATION BAR */}
-
-      <div className="android-navigation">
-        <div className="navigation-handle" />
-      </div>
-
-    </main>
+    </div>
   );
 }

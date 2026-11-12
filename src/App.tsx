@@ -7,6 +7,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<"home" | "privacy">("home");
 
   return (
+    
     <div className="min-h-screen w-full">
       {/* Keep the music component mounted on every page */}
       <div

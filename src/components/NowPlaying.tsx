@@ -31,6 +31,12 @@ export default function NowPlaying({
 }: NowPlayingProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Prevent duplicate initialization in React StrictMode.
+  const lastRequestIdRef = useRef<number | null>(null);
+
+  // Identify the latest playback request.
+  const playAttemptRef = useRef(0);
+
   const [songIndex, setSongIndex] = useState(initialIndex);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -48,52 +54,117 @@ export default function NowPlaying({
     return `${minutes}:${String(seconds).padStart(2, "0")}`;
   };
 
+  // Load and play the selected song.
   const loadSong = (index: number, autoplay: boolean) => {
     const audio = audioRef.current;
     const selectedSong = songs[index];
 
-    if (!audio || !selectedSong) return;
+    if (!audio || !selectedSong) {
+      console.error("Selected song is not available:", index);
+      return;
+    }
+
+    // Invalidate any previous playback attempt.
+    const currentAttempt = ++playAttemptRef.current;
 
     setSongIndex(index);
     setCurrentTime(0);
     setDuration(0);
+    setPlaying(false);
 
+    // Stop the previous song before loading the new one.
     audio.pause();
+    audio.removeAttribute("src");
+    audio.load();
+
+    // Load the selected audio file.
     audio.src = selectedSong.src;
     audio.load();
 
-    if (autoplay) {
-      audio.play().catch((error) => {
-        console.error("Audio playback failed:", error);
+    if (!autoplay) return;
+
+    // Start playback and handle errors safely.
+    audio
+      .play()
+      .then(() => {
+        if (currentAttempt === playAttemptRef.current) {
+          setPlaying(true);
+        }
+      })
+      .catch((error: unknown) => {
+        // Ignore interrupted requests caused by a newer song selection.
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        if (currentAttempt !== playAttemptRef.current) return;
+
         setPlaying(false);
+
+        console.error("Audio playback failed:", {
+          song: selectedSong.title,
+          source: selectedSong.src,
+          error,
+        });
       });
-    }
   };
 
+  // Initialize playback when a new menu selection arrives.
   useEffect(() => {
     if (requestId === 0) return;
 
+    // React StrictMode can run this effect twice in development.
+    if (lastRequestIdRef.current === requestId) return;
+
+    lastRequestIdRef.current = requestId;
+
     loadSong(initialIndex, true);
 
+    // loadSong intentionally uses the latest props for this request.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestId]);
 
+  // Play or pause the current song.
   const togglePlay = async () => {
     const audio = audioRef.current;
+
     if (!audio) return;
 
     if (audio.paused) {
+      const currentAttempt = ++playAttemptRef.current;
+
       try {
         await audio.play();
-      } catch (error) {
-        console.error("Audio playback failed:", error);
+
+        if (currentAttempt === playAttemptRef.current) {
+          setPlaying(true);
+        }
+      } catch (error: unknown) {
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        if (currentAttempt !== playAttemptRef.current) return;
+
         setPlaying(false);
+        console.error("Unable to play audio:", error);
       }
     } else {
+      // Invalidate any pending play request.
+      playAttemptRef.current++;
+
       audio.pause();
+      setPlaying(false);
     }
   };
 
+  // Move to the previous or next song.
   const changeSong = (direction: number) => {
     if (songs.length <= 1) return;
 
@@ -103,6 +174,7 @@ export default function NowPlaying({
     loadSong(nextIndex, true);
   };
 
+  // Seek through the audio.
   const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     const audio = audioRef.current;
@@ -113,8 +185,10 @@ export default function NowPlaying({
     setCurrentTime(value);
   };
 
+  // Mute or unmute the audio.
   const handleMute = () => {
     const audio = audioRef.current;
+
     if (!audio) return;
 
     audio.muted = !audio.muted;
@@ -160,6 +234,17 @@ export default function NowPlaying({
           } else {
             setPlaying(false);
           }
+        }}
+        onError={() => {
+          const audio = audioRef.current;
+
+          if (!audio) return;
+
+          console.error("Audio file loading error:", {
+            source: audio.currentSrc || audio.src,
+            errorCode: audio.error?.code,
+            errorMessage: audio.error?.message,
+          });
         }}
       />
 
@@ -248,8 +333,8 @@ export default function NowPlaying({
       <footer
         className="z-30 w-full shrink-0 px-2 pt-2 sm:px-5 sm:pt-3"
         style={{
-         paddingBottom:
-  "calc(max(env(safe-area-inset-bottom), 24px) + 10px)",
+          paddingBottom:
+            "calc(max(env(safe-area-inset-bottom), 24px) + 10px)",
         }}
       >
         <div className="mx-auto flex min-h-[62px] w-full max-w-[650px] items-center gap-1.5 rounded-2xl border border-white/70 bg-[#f4f4f4] px-2 shadow-xl sm:min-h-[76px] sm:gap-3 sm:rounded-full sm:px-5">
