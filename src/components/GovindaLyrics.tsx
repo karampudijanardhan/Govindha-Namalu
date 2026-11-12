@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 
 import {
@@ -315,10 +314,8 @@ export default function GovindaLyrics({
     setMenuOpen(false);
 
     if (category === "govinda") {
-      // Govinda Namalu opens the lyrics screen
       setNowPlayingIndex(null);
     } else {
-      // Other categories open the player directly
       setNowPlayingIndex(0);
     }
   };
@@ -365,20 +362,14 @@ export default function GovindaLyrics({
         songs={currentSongs}
         initialIndex={nowPlayingIndex}
         onBack={() => {
-          // Close the music player
           setNowPlayingIndex(null);
-
-          // Always return to the main Govinda Namalu screen
           setActiveCategory("govinda");
-
-          // Reset other navigation states
           setShowFavorites(false);
           setMenuOpen(false);
         }}
       />
     );
   }
-
 
   return (
     <main className="govinda-app">
@@ -483,83 +474,59 @@ export default function GovindaLyrics({
         </div>
       )}
 
-     {/* Lyrics and songs section */}
-<section className="lyrics-list">
-  {showFavorites ? (
-    favorites.length > 0 ? (
-      favorites.map((name) => (
-        <article className="lyrics-card" key={name}>
-          <p className="names-lines">
-            <span>{name}</span>
+      {/* Lyrics section */}
+      <section className="lyrics-list">
+        {showFavorites ? (
+          favorites.length > 0 ? (
+            favorites.map((name) => (
+              <article className="lyrics-card" key={name}>
+                <p className="names-lines">
+                  <span>{name}</span>
 
-            <button
-              className="favorite-button active"
-              onClick={() => toggleFavorite(name)}
-              aria-label={`Remove ${name} from favorites`}
-            >
-              <Heart size={23} fill="currentColor" />
-            </button>
-          </p>
+                  <button
+                    className="favorite-button active"
+                    onClick={() => toggleFavorite(name)}
+                    aria-label={`Remove ${name} from favorites`}
+                  >
+                    <Heart size={23} fill="currentColor" />
+                  </button>
+                </p>
 
-          <p className="chorus-line">{chorus}</p>
-        </article>
-      ))
-    ) : (
-      <div className="empty-favorites">
-        <Heart size={55} />
-        <h2>No Favorites Yet</h2>
-        <p>No favorite Govinda Namalu have been saved yet.</p>
+                <p className="chorus-line">{chorus}</p>
+              </article>
+            ))
+          ) : (
+            <div className="empty-favorites">
+              <Heart size={55} />
+              <h2>No Favorites Yet</h2>
+              <p>No favorite Govinda Namalu have been saved yet.</p>
 
-        <button onClick={openHome}>
-          Explore Govinda Namalu
-        </button>
+              <button onClick={openHome}>
+                Explore Govinda Namalu
+              </button>
+            </div>
+          )
+        ) : activeCategory === "govinda" ? (
+          stanzas.map((stanza, index) => (
+            <article className="lyrics-card" key={index}>
+              <p className="names-lines">
+                {stanza.map((name) => (
+                  <span key={name} className="namalu-item">
+                    <span>{name}</span>
+                  </span>
+                ))}
+              </p>
+
+              <p className="chorus-line">{chorus}</p>
+            </article>
+          ))
+        ) : null}
+      </section>
+
+      {/* Android-style navigation bar */}
+      <div className="android-navigation">
+        <div className="navigation-handle" />
       </div>
-    )
-  ) : activeCategory === "govinda" ? (
-    stanzas.map((stanza, index) => (
-      <article className="lyrics-card" key={index}>
-        <p className="names-lines">
-          {stanza.map((name) => (
-            <span key={name} className="namalu-item">
-              <span>{name}</span>
-            </span>
-          ))}
-        </p>
-
-        <p className="chorus-line">{chorus}</p>
-      </article>
-    ))
-  ) : (
-    songCategories
-      .find((category) => category.id === activeCategory)
-      ?.songs.map((song) => (
-        <article className="lyrics-card" key={song.src}>
-          <p className="names-lines">
-            <span>{song.title}</span>
-
-            <button
-              className="circle-control"
-              onClick={() => playSelectedSong(song)}
-              aria-label={`Play ${song.title}`}
-            >
-              <Play size={22} fill="white" />
-            </button>
-          </p>
-
-          <p className="chorus-line">
-            {selectedSong.src === song.src
-              ? "Selected song"
-              : "Tap play to listen"}
-          </p>
-        </article>
-      ))
-  )}
-</section>
-
-{/* Android-style navigation bar */}
-<div className="android-navigation">
-  <div className="navigation-handle" />
-</div>
     </main>
   );
 }
