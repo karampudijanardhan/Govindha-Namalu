@@ -1,13 +1,13 @@
 
 /* =========================================
-   IMPORTS
+   GOVINDA NAMALU - FINAL CSS
 ========================================= */
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* =========================================
-   GLOBAL STYLES
+   GLOBAL
 ========================================= */
 
 * {
@@ -42,65 +42,40 @@ body {
 }
 
 /* =========================================
-   STATUS BAR
-========================================= */
-
-.status-bar {
-  height: clamp(40px, 7dvh, 65px);
-  width: 100%;
-  padding: 0 clamp(10px, 4vw, 40px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  background: #ff9f00;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  font-size: clamp(13px, 2vw, 20px);
-}
-
-.status-center {
-  font-size: clamp(12px, 1.8vw, 18px);
-}
-
-.status-right {
-  font-size: clamp(11px, 1.7vw, 17px);
-  white-space: nowrap;
-}
-
-/* =========================================
    APP HEADER
 ========================================= */
 
 .app-header {
+  width: 100%;
   height: 86px;
   min-height: 86px;
-  width: 100%;
+  padding: 0 22px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 0 22px;
-  background: #ffc107;
-  color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+
   position: sticky;
   top: 0;
   z-index: 10;
+
+  background: #ffc107;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 }
 
 .app-header h1 {
-  min-width: 0;
   flex: 1;
+  min-width: 0;
   margin: 0;
   text-align: center;
+  white-space: nowrap;
+
   font-family: Arial, sans-serif;
   font-size: clamp(21px, 4vw, 30px);
   font-weight: 600;
-  white-space: nowrap;
 }
-
-/* Header buttons */
 
 .menu-button,
 .circle-control {
@@ -108,9 +83,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  background: transparent;
+
   color: #fff;
+  background: transparent;
+  border: none;
   cursor: pointer;
 }
 
@@ -135,38 +111,6 @@ body {
 }
 
 /* =========================================
-   MENU
-========================================= */
-
-.menu-panel {
-  position: absolute;
-  top: 100px;
-  left: 12px;
-  z-index: 30;
-  width: 230px;
-  padding: 12px;
-  background: #f7f6fc;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  -ms-border-radius: 15px;
-  -o-border-radius: 15px;
-  border-radius: 15px;
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
-}
-
-.menu-panel button {
-  display: block;
-  width: 100%;
-  border: none;
-  background: transparent;
-  padding: 13px;
-  text-align: left;
-  color: #669f62;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-/* =========================================
    LYRICS LIST
 ========================================= */
 
@@ -174,8 +118,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+
   width: 100%;
+  gap: 6px;
   padding: 4px 3px 12px;
 }
 
@@ -188,85 +133,108 @@ body {
   max-width: 900px;
   min-height: 155px;
   height: auto;
+
   margin: 0 auto;
-  padding: 17px 14px;
+  padding: 15px 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+
+  text-align: center;
+  background: #f7f6fc;
   -webkit-border-radius: 28px;
   -moz-border-radius: 28px;
   -ms-border-radius: 28px;
   -o-border-radius: 28px;
   border-radius: 28px;
-  background: #f7f6fc;
+
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
 /* =========================================
-   TELUGU LYRICS TEXT
+   TELUGU GOVINDA NAMES
 ========================================= */
 
-.names-lines,
-.chorus-line {
+.names-lines {
+  display: block;
   width: 100%;
+
+  margin: 0 !important;
+  padding: 0;
+
   color: #6f9f6b;
   font-family: "Noto Sans Telugu", sans-serif;
   font-size: 19px !important;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.3;
+
   text-align: center;
-  overflow-wrap: break-word;
   white-space: normal;
+  overflow-wrap: break-word;
 }
 
-.names-lines {
+/* Keep every name inline.
+   Do not display each name as a separate row. */
+
+.names-lines > span,
+.namalu-item,
+.namalu-item > span {
+  display: inline;
   margin: 0;
   padding: 0;
 }
 
-.names-lines span {
-  display: inline;
-}
-
-.chorus-line {
-  margin-top: 3px;
-  padding: 0;
-}
-
-/* Individual Govinda Namalu */
+/* Small natural spacing between names */
 
 .namalu-item {
-  display: inline;
-  align-items: initial;
-  gap: 0;
-  margin: 0 5px 0 0;
-  padding: 0;
-}
-
-.namalu-item > span {
-  display: inline;
+  margin-right: 4px;
 }
 
 /* =========================================
-   FAVORITE BUTTON
+   GOVINDA CHORUS / REFRAIN
+========================================= */
+
+.chorus-line {
+  display: block;
+  width: 100%;
+
+  margin: 2px 0 0 !important;
+  padding: 0;
+
+  color: #6f9f6b;
+  font-family: "Noto Sans Telugu", sans-serif;
+  font-size: 19px !important;
+  font-weight: 500;
+  line-height: 1.3;
+
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* =========================================
+   FAVORITES
 ========================================= */
 
 .favorite-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  background: transparent;
-  color: #777;
-  cursor: pointer;
+
   padding: 5px;
+  border: none;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   border-radius: 50%;
+
+  background: transparent;
+  color: #777;
+  cursor: pointer;
   -webkit-transition: 0.2s ease;
   -moz-transition: 0.2s ease;
   -ms-transition: 0.2s ease;
@@ -286,13 +254,9 @@ body {
   color: #e53935;
 }
 
-/* =========================================
-   EMPTY FAVORITES
-========================================= */
-
 .empty-favorites {
-  text-align: center;
   padding: 45px 20px;
+  text-align: center;
 }
 
 .empty-favorites svg {
@@ -320,18 +284,7 @@ body {
 }
 
 /* =========================================
-   ANDROID NAVIGATION
-   Hide custom navigation because Android
-   already displays its system navigation.
-========================================= */
-
-.android-navigation,
-.navigation-handle {
-  display: none !important;
-}
-
-/* =========================================
-   LEFT NAVIGATION DRAWER
+   NAVIGATION DRAWER
 ========================================= */
 
 .drawer-layer {
@@ -351,10 +304,13 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
+
   width: 78%;
   max-width: 580px;
+
   background: #fafafa;
   overflow-y: auto;
+
   box-shadow: 5px 0 20px rgba(0, 0, 0, 0.18);
   -webkit-animation: drawerSlide 0.25s ease-out;
   animation: drawerSlide 0.25s ease-out;
@@ -368,10 +324,10 @@ body {
 }
 
 .drawer-banner img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .drawer-menu {
@@ -379,19 +335,23 @@ body {
 }
 
 .drawer-item {
-  width: 100%;
-  height: 100px;
-  padding: 0 35px;
   display: flex;
   align-items: center;
-  gap: 70px;
+  gap: 48px;
+
+  width: 100%;
+  height: 100px;
+  padding: 0 28px;
+
   border: none;
   background: #fafafa;
+
   color: #252525;
   font-family: Arial, sans-serif;
-  font-size: 27px;
+  font-size: 23px;
   font-weight: 500;
   text-align: left;
+
   cursor: pointer;
 }
 
@@ -413,8 +373,6 @@ body {
   background: #eee;
 }
 
-/* Drawer animation */
-
 @keyframes drawerSlide {
   from {
     -webkit-transform: translateX(-100%);
@@ -434,7 +392,17 @@ body {
 }
 
 /* =========================================
-   MOBILE RESPONSIVE
+   ANDROID NAVIGATION
+   Use the Android system navigation bar.
+========================================= */
+
+.android-navigation,
+.navigation-handle {
+  display: none !important;
+}
+
+/* =========================================
+   MOBILE SCREENS
 ========================================= */
 
 @media (max-width: 600px) {
@@ -468,18 +436,22 @@ body {
   .lyrics-card {
     width: 99%;
     min-height: 155px;
-    padding: 17px 14px;
-    -webkit-border-radius: 28px;
-    -moz-border-radius: 28px;
-    -ms-border-radius: 28px;
-    -o-border-radius: 28px;
-    border-radius: 28px;
+    padding: 15px 12px;
+    -webkit-border-radius: 27px;
+    -moz-border-radius: 27px;
+    -ms-border-radius: 27px;
+    -o-border-radius: 27px;
+    border-radius: 27px;
   }
 
   .names-lines,
   .chorus-line {
     font-size: 19px !important;
-    line-height: 1.4;
+    line-height: 1.3;
+  }
+
+  .chorus-line {
+    margin-top: 2px !important;
   }
 
   .navigation-drawer {
@@ -530,15 +502,10 @@ body {
     border-width: 2px;
   }
 
-  .status-bar {
-    height: 38px;
-    padding: 0 8px;
-  }
-
   .lyrics-card {
     width: 98%;
     min-height: 145px;
-    padding: 15px 11px;
+    padding: 13px 9px;
     -webkit-border-radius: 24px;
     -moz-border-radius: 24px;
     -ms-border-radius: 24px;
@@ -549,7 +516,7 @@ body {
   .names-lines,
   .chorus-line {
     font-size: 19px !important;
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
   .drawer-item {
@@ -560,7 +527,7 @@ body {
 }
 
 /* =========================================
-   TABLETS AND LARGE SCREENS
+   TABLETS AND DESKTOP
 ========================================= */
 
 @media (min-width: 768px) {
@@ -579,7 +546,7 @@ body {
 }
 
 /* =========================================
-   SAFE AREA SUPPORT
+   SAFE AREA
 ========================================= */
 
 @supports (padding: env(safe-area-inset-bottom)) {
