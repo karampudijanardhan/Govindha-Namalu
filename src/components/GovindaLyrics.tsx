@@ -252,13 +252,18 @@ const FAVORITES_STORAGE_KEY =
   "govinda-namalu-favorites";
 
 // =========================================
-// TWO GOVINDA NAMES PER CARD
+// FIRST CARD: 4 NAMES
+// REMAINING CARDS: 2 NAMES
 // =========================================
 
 function createStanzas() {
   const stanzas: string[][] = [];
 
-  for (let i = 0; i < names.length; i += 2) {
+  // First card contains exactly 4 names
+  stanzas.push(names.slice(0, 4));
+
+  // All remaining cards contain 2 names
+  for (let i = 4; i < names.length; i += 2) {
     stanzas.push(names.slice(i, i + 2));
   }
 
@@ -299,7 +304,7 @@ export default function GovindaLyrics({
   const [playerRequestId, setPlayerRequestId] =
     useState(0);
 
-  // Load saved favorites.
+  // Load saved favorites
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(
@@ -320,7 +325,7 @@ export default function GovindaLyrics({
 
   const currentSongs = currentCategory?.songs ?? [];
 
-  // Save favorites.
+  // Save favorites
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -332,7 +337,7 @@ export default function GovindaLyrics({
     }
   }, [favorites]);
 
-  // Add or remove favorites.
+  // Add or remove favorites
   const toggleFavorite = (name: string) => {
     setFavorites((previous) => {
       if (previous.includes(name)) {
@@ -343,7 +348,7 @@ export default function GovindaLyrics({
     });
   };
 
-  // Select category.
+  // Select category
   const selectCategory = (category: SongCategory) => {
     const selected = songCategories.find(
       (item) => item.id === category
@@ -365,7 +370,7 @@ export default function GovindaLyrics({
     }
   };
 
-  // Open selected song player.
+  // Open selected song player
   const openSongPlayer = (index: number) => {
     if (index < 0 || index >= currentSongs.length) return;
 
@@ -378,7 +383,7 @@ export default function GovindaLyrics({
     setMenuOpen(false);
   };
 
-  // Open external page.
+  // Open external page
   const openPage = (url: string) => {
     if (
       !url ||
@@ -392,14 +397,14 @@ export default function GovindaLyrics({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Favorites page.
+  // Favorites page
   const openFavorites = () => {
     setShowFavorites(true);
     setMenuOpen(false);
     setNowPlayingIndex(null);
   };
 
-  // Home page.
+  // Home page
   const openHome = () => {
     setActiveCategory("govinda");
     setShowFavorites(false);
