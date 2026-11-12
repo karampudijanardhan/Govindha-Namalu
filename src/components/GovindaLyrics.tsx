@@ -559,26 +559,23 @@ export default function GovindaLyrics({
               </button>
             </div>
           )
-        ) : activeCategory === "govinda" ? (
-          stanzas.map((stanza, index) => (
-            <article
-              className="lyrics-card"
-              key={index}
-            >
-              <p className="names-lines">
-                {stanza.map((name) => (
-                  <span key={name} className="namalu-item">
-                    <span>{name}</span>
-                  </span>
-                ))}
-              </p>
+        
+) : activeCategory === "govinda" ? (
+  stanzas.map((stanza, index) => (
+    <article className="lyrics-card" key={index}>
+      <p className="names-lines">
+        {stanza.map((name, nameIndex) => (
+          <span key={nameIndex} className="namalu-item">
+            {name}{" "}
+          </span>
+        ))}
+      </p>
 
-              <p className="chorus-line">
-                {chorus}
-              </p>
-            </article>
-          ))
-        ) : null}
+      <p className="chorus-line">{chorus}</p>
+    </article>
+  ))
+) : null}
+
       </section>
 
       {/* ANDROID NAVIGATION BAR */}
