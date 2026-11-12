@@ -550,14 +550,14 @@ body {
 
   .names-lines,
   .chorus-line {
-    font-size: 20px;
+    font-size: 19px;
     line-height: 1.4;
   }
 
   .drawer-item {
     gap: 30px;
     padding: 0 20px;
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .status-bar {
@@ -586,9 +586,9 @@ body {
 ========================================= */
 
 @media (max-height: 600px) {
-  .names-lines,
-  .chorus-line {
-    font-size: 20px;
-    line-height: 1.35;
-  }
+  ..names-lines,
+.chorus-line {
+  font-size: 19px;
+  line-height: 1.4;
+}
 }
