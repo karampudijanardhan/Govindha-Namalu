@@ -48,7 +48,6 @@ export default function NowPlaying({
     return `${minutes}:${String(seconds).padStart(2, "0")}`;
   };
 
-  // Load and play a newly selected song.
   const loadSong = (index: number, autoplay: boolean) => {
     const audio = audioRef.current;
     const selectedSong = songs[index];
@@ -71,12 +70,11 @@ export default function NowPlaying({
     }
   };
 
-  // A new request means the user selected another song/category.
   useEffect(() => {
     if (requestId === 0) return;
 
     loadSong(initialIndex, true);
-    // requestId changes only when a new song is selected.
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestId]);
 
@@ -125,7 +123,7 @@ export default function NowPlaying({
 
   if (!song) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#00e5e5]">
+      <main className="flex h-dvh items-center justify-center bg-[#00e5e5]">
         No songs available.
       </main>
     );
@@ -135,7 +133,13 @@ export default function NowPlaying({
     duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <main className="flex h-[100dvh] min-h-[420px] w-full flex-col overflow-hidden bg-[#00e5e5] text-black">
+    <main
+      className="relative flex h-dvh w-full flex-col overflow-hidden bg-[#00e5e5] text-black"
+      style={{
+        minHeight: "320px",
+        boxSizing: "border-box",
+      }}
+    >
       <audio
         ref={audioRef}
         preload="metadata"
@@ -159,7 +163,8 @@ export default function NowPlaying({
         }}
       />
 
-      <header className="z-20 flex h-16 w-full shrink-0 items-center gap-3 bg-[#00796f] px-4 text-white shadow-md sm:h-[72px] sm:px-6">
+      {/* Responsive Header */}
+      <header className="z-20 flex h-[clamp(54px,8dvh,72px)] w-full shrink-0 items-center gap-2 bg-[#00796f] px-3 text-white shadow-md sm:gap-3 sm:px-5">
         <button
           onClick={onBack}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10"
@@ -168,82 +173,99 @@ export default function NowPlaying({
           <ArrowLeft size={27} />
         </button>
 
-        <h1 className="min-w-0 flex-1 truncate text-lg font-semibold sm:text-2xl">
+        <h1 className="min-w-0 flex-1 truncate text-base font-semibold sm:text-xl md:text-2xl">
           {song.title}
         </h1>
 
-        <span className="shrink-0 text-sm font-bold sm:text-lg">
+        <span className="shrink-0 text-xs font-bold sm:text-base">
           {songIndex + 1} / {songs.length}
         </span>
       </header>
 
+      {/* Responsive Main Content */}
       <section className="relative flex min-h-0 w-full flex-1 flex-col items-center">
-        <div className="flex w-full shrink-0 justify-between px-4 pt-3 sm:px-8 sm:pt-4">
+        {/* Decorative Bells */}
+        <div className="flex w-full shrink-0 justify-between px-4 py-2 sm:px-8">
           <Bell
-            size={42}
+            className="-rotate-[22deg]"
+            size={36}
             fill="#ffd500"
             stroke="#ffd500"
-            className="-rotate-[22deg] sm:h-[55px] sm:w-[55px]"
           />
 
           <Bell
-            size={42}
+            className="rotate-[22deg]"
+            size={36}
             fill="#ffd500"
             stroke="#ffd500"
-            className="rotate-[22deg] sm:h-[55px] sm:w-[55px]"
           />
         </div>
 
-        <div className="relative flex w-full min-h-0 flex-1 items-center justify-center">
+        {/* Main Image and Song Navigation */}
+        <div className="relative flex min-h-0 w-full flex-1 items-center justify-center px-14 sm:px-20">
           <img
             src="/images/venkateswara.png"
             alt="Lord Venkateswara Swamy"
-            className="block h-auto w-auto max-h-[min(38dvh,330px)] max-w-[65vw] object-contain sm:max-h-[min(46dvh,420px)] sm:max-w-[400px] lg:max-h-[min(55dvh,470px)] lg:max-w-[440px]"
+            className="max-h-full max-w-full object-contain"
+            style={{
+              width: "auto",
+              height: "auto",
+              maxHeight: "min(100%, 43dvh)",
+              maxWidth: "min(100%, 420px)",
+            }}
           />
 
           <button
             onClick={() => changeSong(-1)}
             disabled={songs.length <= 1}
-            className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md transition hover:bg-gray-100 active:scale-95 disabled:opacity-40 sm:left-[max(24px,calc(50%-300px))] sm:h-14 sm:w-14"
+            className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md active:scale-95 disabled:opacity-40 sm:left-5 sm:h-14 sm:w-14"
             aria-label="Previous song"
           >
-            <SkipBack size={25} fill="black" />
+            <SkipBack size={24} fill="black" />
           </button>
 
           <button
             onClick={() => changeSong(1)}
             disabled={songs.length <= 1}
-            className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md transition hover:bg-gray-100 active:scale-95 disabled:opacity-40 sm:right-[max(24px,calc(50%-300px))] sm:h-14 sm:w-14"
+            className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md active:scale-95 disabled:opacity-40 sm:right-5 sm:h-14 sm:w-14"
             aria-label="Next song"
           >
-            <SkipForward size={25} fill="black" />
+            <SkipForward size={24} fill="black" />
           </button>
         </div>
 
-        <div className="flex h-[75px] w-full shrink-0 -translate-y-2 items-center justify-center sm:h-[100px]">
+        {/* Responsive Book Image */}
+        <div className="flex h-[clamp(45px,9dvh,85px)] w-full shrink-0 items-center justify-center">
           <img
             src="/images/open-book.png"
             alt="Open devotional book"
-            className="h-[65px] w-[105px] object-contain drop-shadow-sm sm:h-[90px] sm:w-[140px]"
+            className="h-full max-w-[120px] object-contain sm:max-w-[145px]"
           />
         </div>
       </section>
 
-      <footer className="z-30 flex w-full shrink-0 justify-center px-3 pb-[calc(env(safe-area-inset-bottom)+18px)] pt-2 sm:px-6 sm:pb-7">
-        <div className="flex min-h-[68px] w-full max-w-[540px] items-center gap-2 rounded-full border border-white/70 bg-[#f4f4f4] px-3 shadow-xl sm:min-h-[76px] sm:gap-3 sm:px-5">
+      {/* Responsive Music Controls */}
+      <footer
+        className="z-30 w-full shrink-0 px-2 pt-2 sm:px-5 sm:pt-3"
+        style={{
+          paddingBottom:
+            "calc(max(env(safe-area-inset-bottom), 24px) + 10px)",
+        }}
+      >
+        <div className="mx-auto flex min-h-[62px] w-full max-w-[650px] items-center gap-1.5 rounded-2xl border border-white/70 bg-[#f4f4f4] px-2 shadow-xl sm:min-h-[76px] sm:gap-3 sm:rounded-full sm:px-5">
           <button
             onClick={togglePlay}
-            className="flex h-10 w-9 shrink-0 items-center justify-center text-black transition active:scale-90"
+            className="flex h-10 w-9 shrink-0 items-center justify-center text-black active:scale-90 sm:w-11"
             aria-label={playing ? "Pause music" : "Play music"}
           >
             {playing ? (
-              <Pause size={24} fill="black" />
+              <Pause size={25} fill="black" />
             ) : (
-              <Play size={24} fill="black" />
+              <Play size={25} fill="black" />
             )}
           </button>
 
-          <span className="shrink-0 whitespace-nowrap text-[11px] font-medium tabular-nums sm:text-sm">
+          <span className="shrink-0 whitespace-nowrap text-[10px] font-medium tabular-nums sm:text-sm">
             {formatTime(currentTime)}
           </span>
 
@@ -257,20 +279,24 @@ export default function NowPlaying({
             style={{
               background: `linear-gradient(to right, #00796f ${progress}%, #bdbdbd ${progress}%)`,
             }}
-            className="h-[6px] min-w-0 flex-1 cursor-pointer appearance-none rounded-full accent-[#00796f]"
+            className="h-2 min-w-0 flex-1 cursor-pointer appearance-none rounded-full accent-[#00796f]"
             aria-label="Song progress"
           />
 
-          <span className="shrink-0 whitespace-nowrap text-[11px] font-medium tabular-nums sm:text-sm">
+          <span className="shrink-0 whitespace-nowrap text-[10px] font-medium tabular-nums sm:text-sm">
             {formatTime(duration)}
           </span>
 
           <button
             onClick={handleMute}
-            className="flex h-10 w-8 shrink-0 items-center justify-center text-black transition active:scale-90"
+            className="flex h-10 w-9 shrink-0 items-center justify-center text-black active:scale-90 sm:w-11"
             aria-label={muted ? "Unmute" : "Mute"}
           >
-            {muted ? <VolumeX size={22} /> : <Volume2 size={22} />}
+            {muted ? (
+              <VolumeX size={22} />
+            ) : (
+              <Volume2 size={22} />
+            )}
           </button>
         </div>
       </footer>
