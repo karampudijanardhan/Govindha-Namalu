@@ -19,12 +19,14 @@ export interface PlayerSong {
 interface NowPlayingProps {
   songs: PlayerSong[];
   initialIndex?: number;
+  requestId: number;
   onBack: () => void;
 }
 
 export default function NowPlaying({
   songs,
   initialIndex = 0,
+  requestId,
   onBack,
 }: NowPlayingProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -37,21 +39,47 @@ export default function NowPlaying({
 
   const song = songs[songIndex];
 
-  // Load selected song
-  useEffect(() => {
+  const formatTime = (time: number) => {
+    if (!Number.isFinite(time)) return "0:00";
+
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  };
+
+  // Load and play a newly selected song.
+  const loadSong = (index: number, autoplay: boolean) => {
     const audio = audioRef.current;
-    if (!audio || !song) return;
+    const selectedSong = songs[index];
 
-    audio.pause();
-    audio.src = song.src;
-    audio.load();
+    if (!audio || !selectedSong) return;
 
-    setPlaying(false);
+    setSongIndex(index);
     setCurrentTime(0);
     setDuration(0);
-  }, [song?.src]);
 
-  // Play / Pause
+    audio.pause();
+    audio.src = selectedSong.src;
+    audio.load();
+
+    if (autoplay) {
+      audio.play().catch((error) => {
+        console.error("Audio playback failed:", error);
+        setPlaying(false);
+      });
+    }
+  };
+
+  // A new request means the user selected another song/category.
+  useEffect(() => {
+    if (requestId === 0) return;
+
+    loadSong(initialIndex, true);
+    // requestId changes only when a new song is selected.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestId]);
+
   const togglePlay = async () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -68,33 +96,31 @@ export default function NowPlaying({
     }
   };
 
-  // Previous / Next
   const changeSong = (direction: number) => {
     if (songs.length <= 1) return;
 
-    setSongIndex((previous) =>
-      (previous + direction + songs.length) % songs.length
-    );
+    const nextIndex =
+      (songIndex + direction + songs.length) % songs.length;
+
+    loadSong(nextIndex, true);
   };
 
-  // Format audio time
-  const formatTime = (time: number) => {
-    if (!Number.isFinite(time)) return "0:00";
-
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-
-    return `${minutes}:${String(seconds).padStart(2, "0")}`;
-  };
-
-  // Seek audio
   const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
+    const audio = audioRef.current;
 
-    if (audioRef.current) {
-      audioRef.current.currentTime = value;
-      setCurrentTime(value);
-    }
+    if (!audio || !Number.isFinite(value)) return;
+
+    audio.currentTime = value;
+    setCurrentTime(value);
+  };
+
+  const handleMute = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.muted = !audio.muted;
+    setMuted(audio.muted);
   };
 
   if (!song) {
@@ -105,19 +131,23 @@ export default function NowPlaying({
     );
   }
 
-  return (
-    <main className="flex h-[100dvh] min-h-[500px] w-full flex-col overflow-hidden bg-[#00e5e5] text-black">
+  const progress =
+    duration > 0 ? (currentTime / duration) * 100 : 0;
 
-      {/* AUDIO */}
+  return (
+    <main className="flex h-[100dvh] min-h-[420px] w-full flex-col overflow-hidden bg-[#00e5e5] text-black">
       <audio
         ref={audioRef}
         preload="metadata"
-        onTimeUpdate={() =>
-          setCurrentTime(audioRef.current?.currentTime ?? 0)
-        }
-        onLoadedMetadata={() =>
-          setDuration(audioRef.current?.duration ?? 0)
-        }
+        onTimeUpdate={() => {
+          setCurrentTime(audioRef.current?.currentTime ?? 0);
+        }}
+        onLoadedMetadata={() => {
+          setDuration(audioRef.current?.duration ?? 0);
+        }}
+        onDurationChange={() => {
+          setDuration(audioRef.current?.duration ?? 0);
+        }}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onEnded={() => {
@@ -129,12 +159,10 @@ export default function NowPlaying({
         }}
       />
 
-      {/* HEADER */}
-      <header className="z-20 flex h-[64px] w-full shrink-0 items-center gap-3 bg-[#00796f] px-4 text-white shadow-md sm:h-[72px] sm:px-6">
-
+      <header className="z-20 flex h-16 w-full shrink-0 items-center gap-3 bg-[#00796f] px-4 text-white shadow-md sm:h-[72px] sm:px-6">
         <button
           onClick={onBack}
-          className="flex h-10 w-10 shrink-0 items-center justify-center"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10"
           aria-label="Back"
         >
           <ArrowLeft size={27} />
@@ -149,148 +177,76 @@ export default function NowPlaying({
         </span>
       </header>
 
-      {/* MAIN SCREEN */}
       <section className="relative flex min-h-0 w-full flex-1 flex-col items-center">
-
-        {/* BELLS */}
-        <div className="flex w-full shrink-0 justify-between px-4 pt-3 sm:px-8 sm:pt-4 lg:px-12">
+        <div className="flex w-full shrink-0 justify-between px-4 pt-3 sm:px-8 sm:pt-4">
           <Bell
-            size={44}
+            size={42}
             fill="#ffd500"
             stroke="#ffd500"
             className="-rotate-[22deg] sm:h-[55px] sm:w-[55px]"
           />
 
           <Bell
-            size={44}
+            size={42}
             fill="#ffd500"
             stroke="#ffd500"
             className="rotate-[22deg] sm:h-[55px] sm:w-[55px]"
           />
         </div>
 
-        {/* DEITY IMAGE AND NAVIGATION */}
         <div className="relative flex w-full min-h-0 flex-1 items-center justify-center">
-
           <img
             src="/images/venkateswara.png"
             alt="Lord Venkateswara Swamy"
-            className="
-              block h-auto w-auto
-              max-h-[min(38dvh,330px)]
-              max-w-[65vw]
-              object-contain
-              sm:max-h-[min(46dvh,420px)]
-              sm:max-w-[400px]
-              lg:max-h-[min(55dvh,470px)]
-              lg:max-w-[440px]
-            "
+            className="block h-auto w-auto max-h-[min(38dvh,330px)] max-w-[65vw] object-contain sm:max-h-[min(46dvh,420px)] sm:max-w-[400px] lg:max-h-[min(55dvh,470px)] lg:max-w-[440px]"
           />
 
-          {/* PREVIOUS */}
           <button
             onClick={() => changeSong(-1)}
             disabled={songs.length <= 1}
-            className="
-              absolute left-3 top-1/2
-              flex h-11 w-11 -translate-y-1/2
-              items-center justify-center
-              rounded-full border border-black
-              bg-white shadow-md transition
-              hover:bg-gray-100 active:scale-95
-              disabled:opacity-40
-              sm:left-[max(24px,calc(50%-300px))]
-              sm:h-14 sm:w-14
-              lg:left-[max(40px,calc(50%-360px))]
-            "
+            className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md transition hover:bg-gray-100 active:scale-95 disabled:opacity-40 sm:left-[max(24px,calc(50%-300px))] sm:h-14 sm:w-14"
             aria-label="Previous song"
           >
             <SkipBack size={25} fill="black" />
           </button>
 
-          {/* NEXT */}
           <button
             onClick={() => changeSong(1)}
             disabled={songs.length <= 1}
-            className="
-              absolute right-3 top-1/2
-              flex h-11 w-11 -translate-y-1/2
-              items-center justify-center
-              rounded-full border border-black
-              bg-white shadow-md transition
-              hover:bg-gray-100 active:scale-95
-              disabled:opacity-40
-              sm:right-[max(24px,calc(50%-300px))]
-              sm:h-14 sm:w-14
-              lg:right-[max(40px,calc(50%-360px))]
-            "
+            className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white shadow-md transition hover:bg-gray-100 active:scale-95 disabled:opacity-40 sm:right-[max(24px,calc(50%-300px))] sm:h-14 sm:w-14"
             aria-label="Next song"
           >
             <SkipForward size={25} fill="black" />
           </button>
         </div>
 
-        {/* OPEN BOOK IMAGE */}
-        <div className="
-          flex h-[90px] w-full shrink-0
-          -translate-y-3
-          items-center justify-center
-          sm:h-[105px]
-        ">
+        <div className="flex h-[75px] w-full shrink-0 -translate-y-2 items-center justify-center sm:h-[100px]">
           <img
             src="/images/open-book.png"
             alt="Open devotional book"
-            className="
-              h-[75px] w-[115px]
-              object-contain drop-shadow-sm
-              sm:h-[90px] sm:w-[140px]
-            "
+            className="h-[65px] w-[105px] object-contain drop-shadow-sm sm:h-[90px] sm:w-[140px]"
           />
         </div>
       </section>
 
-      {/* AUDIO PLAYER WITH EXTRA BOTTOM SPACE */}
-      
-<footer className="
-  z-30 flex w-full shrink-0 justify-center
-  px-3
-  pt-3
-  pb-[calc(env(safe-area-inset-bottom)+48px)]
-  sm:px-6
-  sm:pt-4
-  sm:pb-[56px]
-  lg:pb-[64px]
-">
-
-
-        <div className="
-          flex h-[70px] w-full max-w-[500px]
-          items-center gap-2
-          rounded-full border border-white/70
-          bg-[#f4f4f4] px-3 shadow-lg
-          sm:h-[76px] sm:gap-3 sm:px-6
-          lg:max-w-[540px]
-        ">
-
-          {/* PLAY / PAUSE */}
+      <footer className="z-30 flex w-full shrink-0 justify-center px-3 pb-[calc(env(safe-area-inset-bottom)+18px)] pt-2 sm:px-6 sm:pb-7">
+        <div className="flex min-h-[68px] w-full max-w-[540px] items-center gap-2 rounded-full border border-white/70 bg-[#f4f4f4] px-3 shadow-xl sm:min-h-[76px] sm:gap-3 sm:px-5">
           <button
             onClick={togglePlay}
-            className="flex h-10 w-8 shrink-0 items-center justify-center text-black transition active:scale-90"
+            className="flex h-10 w-9 shrink-0 items-center justify-center text-black transition active:scale-90"
             aria-label={playing ? "Pause music" : "Play music"}
           >
             {playing ? (
-              <Pause size={23} fill="black" />
+              <Pause size={24} fill="black" />
             ) : (
-              <Play size={23} fill="black" />
+              <Play size={24} fill="black" />
             )}
           </button>
 
-          {/* CURRENT TIME */}
-          <span className="shrink-0 whitespace-nowrap text-[12px] font-medium tabular-nums sm:text-sm">
+          <span className="shrink-0 whitespace-nowrap text-[11px] font-medium tabular-nums sm:text-sm">
             {formatTime(currentTime)}
           </span>
 
-          {/* PROGRESS */}
           <input
             type="range"
             min={0}
@@ -298,28 +254,24 @@ export default function NowPlaying({
             step={0.1}
             value={Math.min(currentTime, duration || 1)}
             onChange={handleSeek}
-            className="h-[5px] min-w-0 flex-1 cursor-pointer appearance-none rounded-full bg-[#bdbdbd] accent-black"
+            style={{
+              background: `linear-gradient(to right, #00796f ${progress}%, #bdbdbd ${progress}%)`,
+            }}
+            className="h-[6px] min-w-0 flex-1 cursor-pointer appearance-none rounded-full accent-[#00796f]"
             aria-label="Song progress"
           />
 
-          {/* TOTAL DURATION */}
-          <span className="shrink-0 whitespace-nowrap text-[12px] font-medium tabular-nums sm:text-sm">
+          <span className="shrink-0 whitespace-nowrap text-[11px] font-medium tabular-nums sm:text-sm">
             {formatTime(duration)}
           </span>
 
-          {/* VOLUME */}
           <button
-            onClick={() => setMuted((previous) => !previous)}
+            onClick={handleMute}
             className="flex h-10 w-8 shrink-0 items-center justify-center text-black transition active:scale-90"
             aria-label={muted ? "Unmute" : "Mute"}
           >
-            {muted ? (
-              <VolumeX size={22} />
-            ) : (
-              <Volume2 size={22} />
-            )}
+            {muted ? <VolumeX size={22} /> : <Volume2 size={22} />}
           </button>
-
         </div>
       </footer>
     </main>
