@@ -607,14 +607,14 @@ body {
 
   .names-lines,
   .chorus-line {
-    font-size: 27px;
+    font-size: 21px;
     line-height: 1.28;
   }
 
   .drawer-item {
     gap: 30px;
     padding: 0 20px;
-    font-size: 29px;
+    font-size: 20px;
   }
 }
 
@@ -634,12 +634,12 @@ body {
 @media (max-width: 600px) {
   .names-lines,
   .chorus-line {
-    font-size: clamp(21px, 3.5vw, 20px);
+    font-size: clamp(1px, 3.5vw, 19px);
     line-height: 1.2;
   }
 
   .lyrics-card {
-    padding: 14px 2px;
+    padding: 14px 12px;
   }
 }
 
@@ -647,8 +647,8 @@ body {
 @media (max-width: 380px) {
   .names-lines,
   .chorus-line {
-    font-size: 20px;
-    line-height: 1.2;
+    font-size: 15px;
+    line-height: 1.5;
   }
 
   .lyrics-card {
@@ -660,7 +660,7 @@ body {
 @media (max-height: 600px) {
   .names-lines,
   .chorus-line {
-    font-size: 20px;
+    font-size: 15px;
     line-height: 1.4;
   }
 }
