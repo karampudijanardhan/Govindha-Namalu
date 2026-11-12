@@ -35,13 +35,14 @@ body {
 
 .govinda-app {
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   background: #afd0d2;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* =========================================
-   TOP STATUS BAR
+   STATUS BAR
 ========================================= */
 
 .status-bar {
@@ -72,14 +73,14 @@ body {
 ========================================= */
 
 .app-header {
-  height: clamp(58px, 9dvh, 76px);
-  min-height: 58px;
+  height: 86px;
+  min-height: 86px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(5px, 1.5vw, 14px);
-  padding: 0 clamp(8px, 3vw, 24px);
+  gap: 12px;
+  padding: 0 22px;
   background: #ffc107;
   color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
@@ -94,11 +95,8 @@ body {
   margin: 0;
   text-align: center;
   font-family: Arial, sans-serif;
-  font-size: clamp(16px, 2.5vw, 26px);
+  font-size: clamp(21px, 4vw, 30px);
   font-weight: 600;
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -121,14 +119,14 @@ body {
 }
 
 .menu-button svg {
-  width: clamp(23px, 3vw, 30px);
-  height: clamp(23px, 3vw, 30px);
+  width: 32px;
+  height: 32px;
 }
 
 .circle-control {
-  width: clamp(38px, 6vw, 48px);
-  height: clamp(38px, 6vw, 48px);
-  border: 3px solid #fff;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #fff;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -175,8 +173,10 @@ body {
 .lyrics-list {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 4px 3px 15px;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 3px 12px;
 }
 
 /* =========================================
@@ -184,18 +184,17 @@ body {
 ========================================= */
 
 .lyrics-card {
-  width: 96%;
+  width: 99%;
   max-width: 900px;
-  min-height: 0;
+  min-height: 155px;
   height: auto;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 15px 14px;
-  -webkit-border-radius: 26px;
-  -moz-border-radius: 26px;
-  -ms-border-radius: 26px;
-  -o-border-radius: 26px;
-  border-radius: 26px;
+  margin: 0 auto;
+  padding: 17px 14px;
+  -webkit-border-radius: 28px;
+  -moz-border-radius: 28px;
+  -ms-border-radius: 28px;
+  -o-border-radius: 28px;
+  border-radius: 28px;
   background: #f7f6fc;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
   display: flex;
@@ -203,7 +202,6 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-sizing: border-box;
 }
 
 /* =========================================
@@ -215,11 +213,12 @@ body {
   width: 100%;
   color: #6f9f6b;
   font-family: "Noto Sans Telugu", sans-serif;
-  font-size: 20px;
+  font-size: 19px !important;
   font-weight: 500;
   line-height: 1.4;
   text-align: center;
   overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .names-lines {
@@ -231,16 +230,12 @@ body {
   display: inline;
 }
 
-/* Chorus */
-
 .chorus-line {
   margin-top: 3px;
   padding: 0;
 }
 
-/* =========================================
-   INDIVIDUAL GOVINDA NAMALU
-========================================= */
+/* Individual Govinda Namalu */
 
 .namalu-item {
   display: inline;
@@ -326,7 +321,8 @@ body {
 
 /* =========================================
    ANDROID NAVIGATION
-   Use the real Android system navigation bar.
+   Hide custom navigation because Android
+   already displays its system navigation.
 ========================================= */
 
 .android-navigation,
@@ -414,12 +410,10 @@ body {
 }
 
 .drawer-item:active {
-  background: #eeeeee;
+  background: #eee;
 }
 
-/* =========================================
-   DRAWER ANIMATION
-========================================= */
+/* Drawer animation */
 
 @keyframes drawerSlide {
   from {
@@ -445,6 +439,8 @@ body {
 
 @media (max-width: 600px) {
   .app-header {
+    height: 86px;
+    min-height: 86px;
     padding: 0 12px;
     gap: 8px;
   }
@@ -459,35 +455,31 @@ body {
   }
 
   .circle-control {
-    width: 45px;
-    height: 45px;
-    border-width: 3px;
+    width: 49px;
+    height: 49px;
+    border-width: 4px;
   }
 
   .lyrics-list {
-    gap: 7px;
+    gap: 6px;
     padding: 4px 3px 12px;
   }
 
   .lyrics-card {
-    width: 94%;
-    min-height: 0;
-    padding: 14px 12px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -ms-border-radius: 25px;
-    -o-border-radius: 25px;
-    border-radius: 25px;
+    width: 99%;
+    min-height: 155px;
+    padding: 17px 14px;
+    -webkit-border-radius: 28px;
+    -moz-border-radius: 28px;
+    -ms-border-radius: 28px;
+    -o-border-radius: 28px;
+    border-radius: 28px;
   }
 
   .names-lines,
   .chorus-line {
-    font-size: 20px;
+    font-size: 19px !important;
     line-height: 1.4;
-  }
-
-  .chorus-line {
-    margin-top: 3px;
   }
 
   .navigation-drawer {
@@ -524,7 +516,7 @@ body {
   }
 
   .app-header h1 {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .menu-button svg {
@@ -538,31 +530,32 @@ body {
     border-width: 2px;
   }
 
+  .status-bar {
+    height: 38px;
+    padding: 0 8px;
+  }
+
   .lyrics-card {
-    width: 92%;
-    padding: 12px 10px;
-    -webkit-border-radius: 23px;
-    -moz-border-radius: 23px;
-    -ms-border-radius: 23px;
-    -o-border-radius: 23px;
-    border-radius: 23px;
+    width: 98%;
+    min-height: 145px;
+    padding: 15px 11px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
+    -ms-border-radius: 24px;
+    -o-border-radius: 24px;
+    border-radius: 24px;
   }
 
   .names-lines,
   .chorus-line {
-    font-size: 19px;
+    font-size: 19px !important;
     line-height: 1.4;
   }
 
   .drawer-item {
     gap: 30px;
     padding: 0 20px;
-    font-size: 19px;
-  }
-
-  .status-bar {
-    height: 38px;
-    padding: 0 8px;
+    font-size: 20px;
   }
 }
 
@@ -579,16 +572,18 @@ body {
   .app-header h1 {
     font-size: clamp(22px, 2.2vw, 30px);
   }
+
+  .lyrics-card {
+    width: 96%;
+  }
 }
 
 /* =========================================
-   VERY SHORT SCREENS
+   SAFE AREA SUPPORT
 ========================================= */
 
-@media (max-height: 600px) {
-  ..names-lines,
-.chorus-line {
-  font-size: 19px;
-  line-height: 1.4;
-}
+@supports (padding: env(safe-area-inset-bottom)) {
+  .govinda-app {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
