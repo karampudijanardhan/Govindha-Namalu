@@ -13,7 +13,10 @@ import {
 
 import NowPlaying from "./NowPlaying";
 
+// =========================================
 // GOVINDA NAMALU - TELUGU LYRICS
+// =========================================
+
 const names = [
   "శ్రీనివాస గోవిందా",
   "శ్రీ వేంకటేశా గోవిందా",
@@ -128,6 +131,10 @@ const names = [
 const chorus =
   "గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
 
+// =========================================
+// SONG TYPES
+// =========================================
+
 type Song = {
   title: string;
   src: string;
@@ -138,6 +145,10 @@ type SongCategory =
   | "suprabhatam"
   | "stotram"
   | "annamacharya";
+
+// =========================================
+// SONG CATEGORIES
+// =========================================
 
 const songCategories: {
   id: SongCategory;
@@ -202,10 +213,10 @@ const songCategories: {
         title: "Kondalalo Nelakonna",
         src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna - SenSongsMp3.Co.mp3",
       },
-    {
-  title: "Nigama Nagamanta",
-  src: "/audio/Annamacharya-Keerthanalu/Nigama Nagamamta - SenSongsMp3.Co (1).mp3",
-},
+      {
+        title: "Nigama Nagamanta",
+        src: "/audio/Annamacharya-Keerthanalu/Nigama Nagamamta - SenSongsMp3.Co (1).mp3",
+      },
       {
         title: "Podagantimayya Purusothama",
         src: "/audio/Annamacharya-Keerthanalu/Podagantimayya Purusothama - SenSongsMp3.Co.mp3",
@@ -230,27 +241,42 @@ const songCategories: {
   },
 ];
 
+// =========================================
+// APP CONFIGURATION
+// =========================================
+
 const MORE_APPS_URL =
   "https://play.google.com/store/apps/developer?id=YOUR_DEVELOPER_ID";
 
 const FAVORITES_STORAGE_KEY =
   "govinda-namalu-favorites";
 
+// =========================================
+// GROUP GOVINDA NAMES INTO STANZAS
+// FOUR NAMES PER CARD
+// =========================================
+
 function createStanzas() {
   const stanzas: string[][] = [];
 
-  stanzas.push(names.slice(0, 4));
-
-  for (let i = 4; i < names.length; i += 2) {
-    stanzas.push(names.slice(i, i + 2));
+  for (let i = 0; i < names.length; i += 4) {
+    stanzas.push(names.slice(i, i + 4));
   }
 
   return stanzas;
 }
 
+// =========================================
+// COMPONENT PROPS
+// =========================================
+
 interface GovindaLyricsProps {
   onPrivacyClick?: () => void;
 }
+
+// =========================================
+// MAIN COMPONENT
+// =========================================
 
 export default function GovindaLyrics({
   onPrivacyClick,
@@ -261,12 +287,11 @@ export default function GovindaLyrics({
   const [activeCategory, setActiveCategory] =
     useState<SongCategory>("govinda");
 
-  // Controls whether the player screen is visible.
-  // null hides the player without unmounting it.
+  // Keep the audio player mounted when hidden.
   const [nowPlayingIndex, setNowPlayingIndex] =
     useState<number | null>(null);
 
-  // Store the active playlist separately from the page.
+  // Active audio playlist.
   const [playerSongs, setPlayerSongs] = useState<Song[]>(
     songCategories[0].songs
   );
@@ -274,9 +299,13 @@ export default function GovindaLyrics({
   const [playerInitialIndex, setPlayerInitialIndex] =
     useState(0);
 
-  // Increment only when the user selects a new song/category.
+  // New song selection request.
   const [playerRequestId, setPlayerRequestId] =
     useState(0);
+
+  // =========================================
+  // FAVORITES STORAGE
+  // =========================================
 
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
@@ -298,7 +327,7 @@ export default function GovindaLyrics({
 
   const currentSongs = currentCategory?.songs ?? [];
 
-  // Save favorites.
+  // Save favorites automatically.
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -310,7 +339,10 @@ export default function GovindaLyrics({
     }
   }, [favorites]);
 
-  // Add or remove favorites.
+  // =========================================
+  // ADD / REMOVE FAVORITES
+  // =========================================
+
   const toggleFavorite = (name: string) => {
     setFavorites((previous) => {
       if (previous.includes(name)) {
@@ -321,7 +353,10 @@ export default function GovindaLyrics({
     });
   };
 
-  // Select a category.
+  // =========================================
+  // SELECT SONG CATEGORY
+  // =========================================
+
   const selectCategory = (category: SongCategory) => {
     const selected = songCategories.find(
       (item) => item.id === category
@@ -334,10 +369,10 @@ export default function GovindaLyrics({
     setMenuOpen(false);
 
     if (category === "govinda") {
-      // Hide player, but keep current audio playing.
+      // Hide player without stopping existing audio.
       setNowPlayingIndex(null);
     } else {
-      // A different category means a new song selection.
+      // Select a new category and play its first song.
       setPlayerSongs(selected.songs);
       setPlayerInitialIndex(0);
       setNowPlayingIndex(0);
@@ -345,7 +380,10 @@ export default function GovindaLyrics({
     }
   };
 
-  // Open and play a selected song.
+  // =========================================
+  // OPEN SELECTED SONG PLAYER
+  // =========================================
+
   const openSongPlayer = (index: number) => {
     if (index < 0 || index >= currentSongs.length) return;
 
@@ -358,7 +396,10 @@ export default function GovindaLyrics({
     setMenuOpen(false);
   };
 
-  // Open external page.
+  // =========================================
+  // OPEN EXTERNAL PAGE
+  // =========================================
+
   const openPage = (url: string) => {
     if (
       !url ||
@@ -372,16 +413,22 @@ export default function GovindaLyrics({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Favorites page.
+  // =========================================
+  // FAVORITES PAGE
+  // =========================================
+
   const openFavorites = () => {
     setShowFavorites(true);
     setMenuOpen(false);
 
-    // Hide player without stopping its audio.
+    // Hide player without stopping audio.
     setNowPlayingIndex(null);
   };
 
-  // Home page.
+  // =========================================
+  // HOME PAGE
+  // =========================================
+
   const openHome = () => {
     setActiveCategory("govinda");
     setShowFavorites(false);
@@ -389,11 +436,17 @@ export default function GovindaLyrics({
     setMenuOpen(false);
   };
 
+  // =========================================
+  // RENDER UI
+  // =========================================
+
   return (
     <main className="govinda-app">
 
-      {/* PERSISTENT AUDIO PLAYER
-          Always mounted. Hiding it does not stop playback. */}
+      {/* =====================================
+          PERSISTENT AUDIO PLAYER
+      ===================================== */}
+
       <div
         className={
           nowPlayingIndex !== null
@@ -413,7 +466,10 @@ export default function GovindaLyrics({
         />
       </div>
 
-      {/* APP TOOLBAR */}
+      {/* =====================================
+          APP TOOLBAR
+      ===================================== */}
+
       <header className="app-header">
         <button
           className="menu-button"
@@ -448,7 +504,10 @@ export default function GovindaLyrics({
         ) : null}
       </header>
 
-      {/* NAVIGATION DRAWER */}
+      {/* =====================================
+          NAVIGATION DRAWER
+      ===================================== */}
+
       {menuOpen && (
         <div className="drawer-layer">
           <div
@@ -516,8 +575,14 @@ export default function GovindaLyrics({
         </div>
       )}
 
-      {/* LYRICS SECTION */}
+      {/* =====================================
+          LYRICS SECTION
+      ===================================== */}
+
       <section className="lyrics-list">
+
+        {/* FAVORITES */}
+
         {showFavorites ? (
           favorites.length > 0 ? (
             favorites.map((name) => (
@@ -548,6 +613,7 @@ export default function GovindaLyrics({
           ) : (
             <div className="empty-favorites">
               <Heart size={55} />
+
               <h2>No Favorites Yet</h2>
 
               <p>
@@ -559,29 +625,45 @@ export default function GovindaLyrics({
               </button>
             </div>
           )
-        
-) : activeCategory === "govinda" ? (
-  stanzas.map((stanza, index) => (
-    <article className="lyrics-card" key={index}>
-      <p className="names-lines">
-        {stanza.map((name, nameIndex) => (
-          <span key={nameIndex} className="namalu-item">
-            {name}{" "}
-          </span>
-        ))}
-      </p>
 
-      <p className="chorus-line">{chorus}</p>
-    </article>
-  ))
-) : null}
+        ) : activeCategory === "govinda" ? (
+
+          /* GOVINDA NAMALU */
+
+          stanzas.map((stanza, index) => (
+            <article
+              className="lyrics-card"
+              key={index}
+            >
+              <p className="names-lines">
+                {stanza.map((name, nameIndex) => (
+                  <span
+                    key={nameIndex}
+                    className="namalu-item"
+                  >
+                    {name}{" "}
+                  </span>
+                ))}
+              </p>
+
+              <p className="chorus-line">
+                {chorus}
+              </p>
+            </article>
+          ))
+
+        ) : null}
 
       </section>
 
-      {/* ANDROID NAVIGATION BAR */}
+      {/* =====================================
+          ANDROID NAVIGATION BAR
+      ===================================== */}
+
       <div className="android-navigation">
         <div className="navigation-handle" />
       </div>
+
     </main>
   );
 }

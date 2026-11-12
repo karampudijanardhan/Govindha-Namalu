@@ -1,6 +1,6 @@
 
 /* =========================================
-   GOVINDA NAMALU - FINAL CSS
+   GOVINDA NAMALU - RESPONSIVE FINAL CSS
 ========================================= */
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap");
@@ -25,6 +25,7 @@ body,
 
 html {
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -34,46 +35,45 @@ body {
 }
 
 .govinda-app {
+  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  width: 100%;
   background: #afd0d2;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* =========================================
-   APP HEADER
+   HEADER
 ========================================= */
 
 .app-header {
   width: 100%;
-  height: 86px;
-  min-height: 86px;
-  padding: 0 22px;
+  height: 76px;
+  min-height: 76px;
+  padding: 0 16px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 
   position: sticky;
   top: 0;
   z-index: 10;
 
   background: #ffc107;
-  color: #fff;
+  color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 }
 
 .app-header h1 {
   flex: 1;
   min-width: 0;
-  margin: 0;
   text-align: center;
   white-space: nowrap;
 
   font-family: Arial, sans-serif;
-  font-size: clamp(21px, 4vw, 30px);
+  font-size: clamp(19px, 4vw, 28px);
   font-weight: 600;
 }
 
@@ -84,7 +84,7 @@ body {
   align-items: center;
   justify-content: center;
 
-  color: #fff;
+  color: white;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -95,14 +95,14 @@ body {
 }
 
 .menu-button svg {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
 }
 
 .circle-control {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #fff;
+  width: 44px;
+  height: 44px;
+  border: 3px solid white;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -115,13 +115,13 @@ body {
 ========================================= */
 
 .lyrics-list {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  width: 100%;
-  gap: 6px;
-  padding: 4px 3px 12px;
+  gap: 7px;
+  padding: 7px 5px 12px;
 }
 
 /* =========================================
@@ -129,33 +129,34 @@ body {
 ========================================= */
 
 .lyrics-card {
-  width: 99%;
+  width: 100%;
   max-width: 900px;
-  min-height: 155px;
+
+  min-height: 0;
   height: auto;
 
   margin: 0 auto;
-  padding: 15px 12px;
+  padding: 12px 10px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 3px;
 
   text-align: center;
   background: #f7f6fc;
-  -webkit-border-radius: 28px;
-  -moz-border-radius: 28px;
-  -ms-border-radius: 28px;
-  -o-border-radius: 28px;
-  border-radius: 28px;
+  -webkit-border-radius: 23px;
+  -moz-border-radius: 23px;
+  -ms-border-radius: 23px;
+  -o-border-radius: 23px;
+  border-radius: 23px;
 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.10);
 }
 
 /* =========================================
-   TELUGU GOVINDA NAMES
+   GOVINDA NAMES
 ========================================= */
 
 .names-lines {
@@ -167,17 +168,19 @@ body {
 
   color: #6f9f6b;
   font-family: "Noto Sans Telugu", sans-serif;
-  font-size: 19px !important;
+
+  font-size: 17px !important;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.55;
 
   text-align: center;
+
   white-space: normal;
   overflow-wrap: break-word;
+  word-break: normal;
 }
 
-/* Keep every name inline.
-   Do not display each name as a separate row. */
+/* Keep every name inline */
 
 .names-lines > span,
 .namalu-item,
@@ -187,14 +190,14 @@ body {
   padding: 0;
 }
 
-/* Small natural spacing between names */
+/* Space between names */
 
 .namalu-item {
   margin-right: 4px;
 }
 
 /* =========================================
-   GOVINDA CHORUS / REFRAIN
+   CHORUS
 ========================================= */
 
 .chorus-line {
@@ -206,9 +209,10 @@ body {
 
   color: #6f9f6b;
   font-family: "Noto Sans Telugu", sans-serif;
-  font-size: 19px !important;
+
+  font-size: 16px !important;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.5;
 
   text-align: center;
   white-space: normal;
@@ -235,6 +239,7 @@ body {
   background: transparent;
   color: #777;
   cursor: pointer;
+
   -webkit-transition: 0.2s ease;
   -moz-transition: 0.2s ease;
   -ms-transition: 0.2s ease;
@@ -243,11 +248,11 @@ body {
 }
 
 .favorite-button:hover {
-  -webkit-transform: scale(1.15);
-  -moz-transform: scale(1.15);
-  -ms-transform: scale(1.15);
-  -o-transform: scale(1.15);
-  transform: scale(1.15);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .favorite-button.active {
@@ -255,7 +260,7 @@ body {
 }
 
 .empty-favorites {
-  padding: 45px 20px;
+  padding: 35px 15px;
   text-align: center;
 }
 
@@ -264,7 +269,7 @@ body {
 }
 
 .empty-favorites h2 {
-  margin: 15px 0 8px;
+  margin: 12px 0 8px;
 }
 
 .empty-favorites p {
@@ -318,7 +323,7 @@ body {
 
 .drawer-banner {
   width: 100%;
-  height: 270px;
+  height: 240px;
   background: #ffc107;
   overflow: hidden;
 }
@@ -337,18 +342,18 @@ body {
 .drawer-item {
   display: flex;
   align-items: center;
-  gap: 48px;
+  gap: 25px;
 
   width: 100%;
-  height: 100px;
-  padding: 0 28px;
+  min-height: 75px;
+  padding: 12px 22px;
 
   border: none;
   background: #fafafa;
 
   color: #252525;
   font-family: Arial, sans-serif;
-  font-size: 23px;
+  font-size: 19px;
   font-weight: 500;
   text-align: left;
 
@@ -373,6 +378,10 @@ body {
   background: #eee;
 }
 
+/* =========================================
+   DRAWER ANIMATION
+========================================= */
+
 @keyframes drawerSlide {
   from {
     -webkit-transform: translateX(-100%);
@@ -393,7 +402,6 @@ body {
 
 /* =========================================
    ANDROID NAVIGATION
-   Use the Android system navigation bar.
 ========================================= */
 
 .android-navigation,
@@ -402,98 +410,24 @@ body {
 }
 
 /* =========================================
-   MOBILE SCREENS
-========================================= */
-
-@media (max-width: 600px) {
-  .app-header {
-    height: 86px;
-    min-height: 86px;
-    padding: 0 12px;
-    gap: 8px;
-  }
-
-  .app-header h1 {
-    font-size: clamp(19px, 5vw, 25px);
-  }
-
-  .menu-button svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  .circle-control {
-    width: 49px;
-    height: 49px;
-    border-width: 4px;
-  }
-
-  .lyrics-list {
-    gap: 6px;
-    padding: 4px 3px 12px;
-  }
-
-  .lyrics-card {
-    width: 99%;
-    min-height: 155px;
-    padding: 15px 12px;
-    -webkit-border-radius: 27px;
-    -moz-border-radius: 27px;
-    -ms-border-radius: 27px;
-    -o-border-radius: 27px;
-    border-radius: 27px;
-  }
-
-  .names-lines,
-  .chorus-line {
-    font-size: 19px !important;
-    line-height: 1.3;
-  }
-
-  .chorus-line {
-    margin-top: 2px !important;
-  }
-
-  .navigation-drawer {
-    width: 78%;
-  }
-
-  .drawer-banner {
-    height: 270px;
-  }
-
-  .drawer-item {
-    height: 100px;
-    padding: 0 28px;
-    gap: 48px;
-    font-size: 23px;
-  }
-
-  .drawer-item svg {
-    width: 34px;
-    height: 34px;
-  }
-}
-
-/* =========================================
-   SMALL MOBILE SCREENS
+   SMALL MOBILE
 ========================================= */
 
 @media (max-width: 380px) {
   .app-header {
-    height: 56px;
-    min-height: 56px;
-    padding: 0 7px;
+    height: 62px;
+    min-height: 62px;
+    padding: 0 8px;
     gap: 5px;
   }
 
   .app-header h1 {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .menu-button svg {
-    width: 23px;
-    height: 23px;
+    width: 25px;
+    height: 25px;
   }
 
   .circle-control {
@@ -502,46 +436,112 @@ body {
     border-width: 2px;
   }
 
-  .lyrics-card {
-    width: 98%;
-    min-height: 145px;
-    padding: 13px 9px;
-    -webkit-border-radius: 24px;
-    -moz-border-radius: 24px;
-    -ms-border-radius: 24px;
-    -o-border-radius: 24px;
-    border-radius: 24px;
+  .lyrics-list {
+    gap: 6px;
+    padding: 6px 4px 10px;
   }
 
-  .names-lines,
+  .lyrics-card {
+    padding: 10px 8px;
+    -webkit-border-radius: 19px;
+    -moz-border-radius: 19px;
+    -ms-border-radius: 19px;
+    -o-border-radius: 19px;
+    border-radius: 19px;
+  }
+
+  .names-lines {
+    font-size: 16px !important;
+    line-height: 1.5;
+  }
+
   .chorus-line {
-    font-size: 19px !important;
-    line-height: 1.3;
+    font-size: 15px !important;
+    line-height: 1.45;
   }
 
   .drawer-item {
-    gap: 30px;
-    padding: 0 20px;
-    font-size: 20px;
+    gap: 18px;
+    padding: 10px 16px;
+    font-size: 17px;
   }
 }
 
 /* =========================================
-   TABLETS AND DESKTOP
+   STANDARD MOBILE
 ========================================= */
 
-@media (min-width: 768px) {
+@media (min-width: 381px) and (max-width: 600px) {
+  .lyrics-card {
+    padding: 11px 10px;
+  }
+
+  .names-lines {
+    font-size: 17px !important;
+  }
+
+  .chorus-line {
+    font-size: 16px !important;
+  }
+}
+
+/* =========================================
+   TABLETS
+========================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .app-header {
+    height: 78px;
+    min-height: 78px;
+  }
+
+  .lyrics-list {
+    gap: 9px;
+    padding: 9px 12px 15px;
+  }
+
+  .lyrics-card {
+    width: 98%;
+    padding: 15px 16px;
+  }
+
+  .names-lines {
+    font-size: 19px !important;
+    line-height: 1.5;
+  }
+
+  .chorus-line {
+    font-size: 18px !important;
+  }
+}
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 1025px) {
   .app-header {
     padding-left: 28px;
     padding-right: 28px;
   }
 
-  .app-header h1 {
-    font-size: clamp(22px, 2.2vw, 30px);
+  .lyrics-list {
+    gap: 10px;
+    padding: 10px 15px 20px;
   }
 
   .lyrics-card {
     width: 96%;
+    padding: 18px 20px;
+  }
+
+  .names-lines {
+    font-size: 20px !important;
+    line-height: 1.5;
+  }
+
+  .chorus-line {
+    font-size: 18px !important;
   }
 }
 
@@ -553,41 +553,4 @@ body {
   .govinda-app {
     padding-bottom: env(safe-area-inset-bottom);
   }
-}
-
-.names-lines {
-  display: block;
-  width: 100%;
-  margin: 0 !important;
-  padding: 0;
-  color: #6f9f6b;
-  font-family: "Noto Sans Telugu", sans-serif;
-  font-size: 19px !important;
-  font-weight: 500;
-  line-height: 1.3;
-  text-align: center;
-  white-space: normal;
-  overflow-wrap: normal;
-  word-break: normal;
-}
-
-.chorus-line {
-  display: block;
-  width: 100%;
-  margin: 2px 0 0 !important;
-  padding: 0;
-  color: #6f9f6b;
-  font-family: "Noto Sans Telugu", sans-serif;
-  font-size: 19px !important;
-  font-weight: 500;
-  line-height: 1.3;
-  text-align: center;
-}
-
-.lyrics-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0;
 }
