@@ -1,556 +1,617 @@
 
-/* =========================================
-   GOVINDA NAMALU - RESPONSIVE FINAL CSS
-========================================= */
-
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap");
-@import "tailwindcss";
-
-/* =========================================
-   GLOBAL
-========================================= */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  width: 100%;
-  min-height: 100%;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-body {
-  font-family: "Noto Sans Telugu", sans-serif;
-  background: #afd0d2;
-  overflow-x: hidden;
-}
-
-.govinda-app {
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: #afd0d2;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-/* =========================================
-   HEADER
-========================================= */
-
-.app-header {
-  width: 100%;
-  height: 76px;
-  min-height: 76px;
-  padding: 0 16px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-
-  position: sticky;
-  top: 0;
-  z-index: 10;
-
-  background: #ffc107;
-  color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
-}
-
-.app-header h1 {
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-  white-space: nowrap;
-
-  font-family: Arial, sans-serif;
-  font-size: clamp(19px, 4vw, 28px);
-  font-weight: 600;
-}
-
-.menu-button,
-.circle-control {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: white;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.menu-button {
-  padding: 5px;
-}
-
-.menu-button svg {
-  width: 30px;
-  height: 30px;
-}
-
-.circle-control {
-  width: 44px;
-  height: 44px;
-  border: 3px solid white;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-}
-
-/* =========================================
-   LYRICS LIST
-========================================= */
-
-.lyrics-list {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  gap: 7px;
-  padding: 7px 5px 12px;
-}
-
-/* =========================================
-   LYRICS CARDS
-========================================= */
-
-.lyrics-card {
-  width: 100%;
-  max-width: 900px;
-
-  min-height: 0;
-  height: auto;
-
-  margin: 0 auto;
-  padding: 12px 10px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-
-  text-align: center;
-  background: #f7f6fc;
-  -webkit-border-radius: 23px;
-  -moz-border-radius: 23px;
-  -ms-border-radius: 23px;
-  -o-border-radius: 23px;
-  border-radius: 23px;
-
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.10);
-}
-
-/* =========================================
-   GOVINDA NAMES
-========================================= */
-
-.names-lines {
-  display: block;
-  width: 100%;
-
-  margin: 0 !important;
-  padding: 0;
-
-  color: #6f9f6b;
-  font-family: "Noto Sans Telugu", sans-serif;
-
-  font-size: 17px !important;
-  font-weight: 500;
-  line-height: 1.55;
-
-  text-align: center;
-
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: normal;
-}
-
-/* Keep every name inline */
-
-.names-lines > span,
-.namalu-item,
-.namalu-item > span {
-  display: inline;
-  margin: 0;
-  padding: 0;
-}
-
-/* Space between names */
-
-.namalu-item {
-  margin-right: 4px;
-}
-
-/* =========================================
-   CHORUS
-========================================= */
-
-.chorus-line {
-  display: block;
-  width: 100%;
-
-  margin: 2px 0 0 !important;
-  padding: 0;
-
-  color: #6f9f6b;
-  font-family: "Noto Sans Telugu", sans-serif;
-
-  font-size: 16px !important;
-  font-weight: 500;
-  line-height: 1.5;
-
-  text-align: center;
-  white-space: normal;
-  overflow-wrap: break-word;
-}
-
-/* =========================================
-   FAVORITES
-========================================= */
-
-.favorite-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 5px;
-  border: none;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-
-  background: transparent;
-  color: #777;
-  cursor: pointer;
-
-  -webkit-transition: 0.2s ease;
-  -moz-transition: 0.2s ease;
-  -ms-transition: 0.2s ease;
-  -o-transition: 0.2s ease;
-  transition: 0.2s ease;
-}
-
-.favorite-button:hover {
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -o-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
-.favorite-button.active {
-  color: #e53935;
-}
-
-.empty-favorites {
-  padding: 35px 15px;
-  text-align: center;
-}
-
-.empty-favorites svg {
-  color: #e53935;
-}
-
-.empty-favorites h2 {
-  margin: 12px 0 8px;
-}
-
-.empty-favorites p {
-  line-height: 1.6;
-}
-
-.empty-favorites button {
-  margin-top: 15px;
-  padding: 12px 22px;
-  border: none;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  -ms-border-radius: 25px;
-  -o-border-radius: 25px;
-  border-radius: 25px;
-  cursor: pointer;
-}
-
-/* =========================================
-   NAVIGATION DRAWER
-========================================= */
-
-.drawer-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-}
-
-.drawer-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.navigation-drawer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-
-  width: 78%;
-  max-width: 580px;
-
-  background: #fafafa;
-  overflow-y: auto;
-
-  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.18);
-  -webkit-animation: drawerSlide 0.25s ease-out;
-  animation: drawerSlide 0.25s ease-out;
-}
-
-.drawer-banner {
-  width: 100%;
-  height: 240px;
-  background: #ffc107;
-  overflow: hidden;
-}
-
-.drawer-banner img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.drawer-menu {
-  padding-top: 10px;
-}
-
-.drawer-item {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-
-  width: 100%;
-  min-height: 75px;
-  padding: 12px 22px;
-
-  border: none;
-  background: #fafafa;
-
-  color: #252525;
-  font-family: Arial, sans-serif;
-  font-size: 19px;
-  font-weight: 500;
-  text-align: left;
-
-  cursor: pointer;
-}
-
-.drawer-item svg {
-  flex-shrink: 0;
-  color: #666;
-}
-
-.drawer-item.selected {
-  background: #dedede;
-  color: #ffc107;
-}
-
-.drawer-item.selected svg {
-  color: #ffc107;
-}
-
-.drawer-item:active {
-  background: #eee;
-}
-
-/* =========================================
-   DRAWER ANIMATION
-========================================= */
-
-@keyframes drawerSlide {
-  from {
-    -webkit-transform: translateX(-100%);
-    -moz-transform: translateX(-100%);
-    -ms-transform: translateX(-100%);
-    -o-transform: translateX(-100%);
-    transform: translateX(-100%);
+import { useEffect, useState } from "react";
+
+import {
+  Menu,
+  Play,
+  Home,
+  LayoutGrid,
+  LockKeyhole,
+  Heart,
+  ArrowLeft,
+} from "lucide-react";
+
+import NowPlaying from "./NowPlaying";
+
+// =========================================
+// GOVINDA NAMALU - TELUGU LYRICS
+// =========================================
+
+const names = [
+  "శ్రీనివాస గోవిందా",
+  "శ్రీ వేంకటేశా గోవిందా",
+  "భక్తవత్సల గోవిందా",
+  "భాగవతప్రియ గోవిందా",
+  "నిత్య నిర్మల గోవిందా",
+  "నీలమేఘ శ్యామ గోవిందా",
+  "పురాణ పురుషా గోవిందా",
+  "పుండరీకాక్ష గోవిందా",
+  "నంద నందనా గోవిందా",
+  "నవనీత చోరా గోవిందా",
+  "పశుపాలక శ్రీ గోవిందా",
+  "పాప విమోచన గోవిందా",
+  "దుష్ట సంహార గోవిందా",
+  "దురిత నివారణ గోవిందా",
+  "శిష్ట పరిపాలక గోవిందా",
+  "కష్ట నివారణ గోవిందా",
+  "వజ్ర మకుటధర గోవిందా",
+  "వరాహ మూర్తి గోవిందా",
+  "గోపీజన లోల గోవిందా",
+  "గోవర్ధనోద్ధార గోవిందా",
+  "దశరథ నందన గోవిందా",
+  "దశముఖ మర్ధన గోవిందా",
+  "పక్షి వాహనా గోవిందా",
+  "పాండవ ప్రియ గోవిందా",
+  "మత్స్య కూర్మ గోవిందా",
+  "మధుసూదన హరి గోవిందా",
+  "వరాహ నృసింహ గోవిందా",
+  "వామన భృగురామ గోవిందా",
+  "బలరామానుజ గోవిందా",
+  "బౌద్ధ కల్కిధర గోవిందా",
+  "వేణుగాన ప్రియ గోవిందా",
+  "వేంకట రమణా గోవిందా",
+  "సీతా నాయక గోవిందా",
+  "శ్రిత పరిపాలక గోవిందా",
+  "దరిద్ర జనపోషక గోవిందా",
+  "ధర్మ సంస్థాపక గోవిందా",
+  "అనాథ రక్షక గోవిందా",
+  "ఆపద్భాంధవ గోవిందా",
+  "శరణాగత వత్సల గోవిందా",
+  "కరుణా సాగర గోవిందా",
+  "కమల దళాక్షా గోవిందా",
+  "కామిత ఫలదాత గోవిందా",
+  "పాప వినాశక గోవిందా",
+  "పాహి మురారే గోవిందా",
+  "శ్రీ ముద్రాంకిత గోవిందా",
+  "శ్రీవత్సాంకిత గోవిందా",
+  "ధరణీ నాయక గోవిందా",
+  "దినకర తేజా గోవిందా",
+  "పద్మావతీ ప్రియ గోవిందా",
+  "ప్రసన్న మూర్తి గోవిందా",
+  "అభయ హస్త గోవిందా",
+  "అక్షయ వరద గోవిందా",
+  "శంఖ చక్రధర గోవిందా",
+  "శారంగధర గోవిందా",
+  "విరాజతీర్థ గోవిందా",
+  "విరోధి మర్ధన గోవిందా",
+  "సాలగ్రామధర గోవిందా",
+  "సహస్రనామ గోవిందా",
+  "లక్ష్మీవల్లభ గోవిందా",
+  "లక్ష్మణాగ్రజ గోవిందా",
+  "కస్తూరి తిలక గోవిందా",
+  "కాంచనాంబరధర గోవిందా",
+  "గరుడ వాహనా గోవిందా",
+  "గజరాజ రక్షక గోవిందా",
+  "వానర సేవిత గోవిందా",
+  "వారధి బంధన గోవిందా",
+  "సప్తగిరీశ గోవిందా",
+  "ఏక స్వరూపా గోవిందా",
+  "శ్రీరామ కృష్ణ గోవిందా",
+  "రఘుకుల నందన గోవిందా",
+  "ప్రత్యక్ష దేవ గోవిందా",
+  "పరమ దయాకర గోవిందా",
+  "వజ్ర కవచధర గోవిందా",
+  "వైజయంతి మాల గోవిందా",
+  "వడ్డీకాసులవాడా గోవిందా",
+  "వసుదేవ తనయ గోవిందా",
+  "బిల్వపత్రార్చిత గోవిందా",
+  "భిక్షుక సంస్తుత గోవిందా",
+  "స్త్రీపుంరూపా గోవిందా",
+  "శివకేశవ మూర్తి గోవిందా",
+  "బ్రహ్మాండ రూప గోవిందా",
+  "భక్త రక్షక గోవిందా",
+  "నిత్య కళ్యాణ గోవిందా",
+  "నీరజనాభా గోవిందా",
+  "హతిరామ ప్రియ గోవిందా",
+  "హరిసర్వోత్తమ గోవిందా",
+  "జనార్దన మూర్తి గోవిందా",
+  "జగత్సాక్షి రూపా గోవిందా",
+  "అభిషేక ప్రియ గోవిందా",
+  "ఆపన్నివారణ గోవిందా",
+  "రత్న కిరీటా గోవిందా",
+  "రామానుజ నుత గోవిందా",
+  "స్వయం ప్రకాశ గోవిందా",
+  "ఆశ్రిత పక్ష గోవిందా",
+  "నిత్య శుభప్రద గోవిందా",
+  "నిఖిల లోకేశా గోవిందా",
+  "ఆనంద రూపా గోవిందా",
+  "ఆద్యంత రహితా గోవిందా",
+  "ఇహపర దాయక గోవిందా",
+  "ఇభరాజ రక్షక గోవిందా",
+  "పరమ దయాళో గోవిందా",
+  "పద్మనాభ హరి గోవిందా",
+  "తిరుమల వాసా గోవిందా",
+  "తులసీవన మాలి గోవిందా",
+  "శేషాద్రి నిలయ గోవిందా",
+  "శేషశయన గోవిందా",
+  "శ్రీ శ్రీనివాసా గోవిందా",
+  "శ్రీ వేంకటేశా గోవిందా",
+];
+
+const chorus =
+  "గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
+
+// =========================================
+// SONG TYPES
+// =========================================
+
+type Song = {
+  title: string;
+  src: string;
+};
+
+type SongCategory =
+  | "govinda"
+  | "suprabhatam"
+  | "stotram"
+  | "annamacharya";
+
+// =========================================
+// SONG CATEGORIES
+// =========================================
+
+const songCategories: {
+  id: SongCategory;
+  title: string;
+  songs: Song[];
+}[] = [
+  {
+    id: "govinda",
+    title: "Govinda Namalu",
+    songs: [
+      {
+        title: "Govinda Namalu",
+        src: "/audio/govinda-namalu.mp3",
+      },
+    ],
+  },
+  {
+    id: "suprabhatam",
+    title: "Sri Venkateswara Suprabhatam",
+    songs: [
+      {
+        title: "Sri Venkateswara Suprabhatham",
+        src: "/audio/MS Subbulakshmi Sri Venkateswara Suprabhatham Lyrical Video.mp3",
+      },
+    ],
+  },
+  {
+    id: "stotram",
+    title: "Venkateswara Stotram",
+    songs: [
+      {
+        title: "Sri Venkatesha Stotram",
+        src: "/audio/Sri Venkatesha Stotram - Invoking the Lord's Mercy - ISKCON Bangalore Music.mp3",
+      },
+    ],
+  },
+  {
+    id: "annamacharya",
+    title: "Annamacharya Keerthanalu",
+    songs: [
+      {
+        title: "Adigo Alladigo",
+        src: "/audio/Annamacharya-Keerthanalu/Adigo Alladigo - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Antaryami Alasithi",
+        src: "/audio/Annamacharya-Keerthanalu/Antaryami Alasithi- SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Ee Mako",
+        src: "/audio/Annamacharya-Keerthanalu/Ee Mako - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Govindasritha",
+        src: "/audio/Annamacharya-Keerthanalu/Govindasritha - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Kalaganti Kalaganti",
+        src: "/audio/Annamacharya-Keerthanalu/Kalaganti Kalaganti - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Kondalalo Nelakonna",
+        src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Nigama Nagamanta",
+        src: "/audio/Annamacharya-Keerthanalu/Nigama Nagamamta - SenSongsMp3.Co (1).mp3",
+      },
+      {
+        title: "Podagantimayya Purusothama",
+        src: "/audio/Annamacharya-Keerthanalu/Podagantimayya Purusothama - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Telugu Padaniki",
+        src: "/audio/Annamacharya-Keerthanalu/Telugu Padaniki - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Tirumala Konda",
+        src: "/audio/Annamacharya-Keerthanalu/Tirumala konda Video song - Annamayya - Volga Devotional.mp3",
+      },
+      {
+        title: "Vinaro Bhagyamu",
+        src: "/audio/Annamacharya-Keerthanalu/Vinaro Bhagyamu - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Vinnapalu Vinavale",
+        src: "/audio/Annamacharya-Keerthanalu/Vinnapalu Vinavale- SenSongsMp3.Co.mp3",
+      },
+    ],
+  },
+];
+
+// =========================================
+// APP CONFIGURATION
+// =========================================
+
+const MORE_APPS_URL =
+  "https://play.google.com/store/apps/developer?id=YOUR_DEVELOPER_ID";
+
+const FAVORITES_STORAGE_KEY =
+  "govinda-namalu-favorites";
+
+// =========================================
+// TWO GOVINDA NAMES PER CARD
+// =========================================
+
+function createStanzas() {
+  const stanzas: string[][] = [];
+
+  for (let i = 0; i < names.length; i += 2) {
+    stanzas.push(names.slice(i, i + 2));
   }
 
-  to {
-    -webkit-transform: translateX(0);
-    -moz-transform: translateX(0);
-    -ms-transform: translateX(0);
-    -o-transform: translateX(0);
-    transform: translateX(0);
-  }
+  return stanzas;
 }
 
-/* =========================================
-   ANDROID NAVIGATION
-========================================= */
+// =========================================
+// COMPONENT PROPS
+// =========================================
 
-.android-navigation,
-.navigation-handle {
-  display: none !important;
+interface GovindaLyricsProps {
+  onPrivacyClick?: () => void;
 }
 
-/* =========================================
-   SMALL MOBILE
-========================================= */
+// =========================================
+// MAIN COMPONENT
+// =========================================
 
-@media (max-width: 380px) {
-  .app-header {
-    height: 62px;
-    min-height: 62px;
-    padding: 0 8px;
-    gap: 5px;
-  }
+export default function GovindaLyrics({
+  onPrivacyClick,
+}: GovindaLyricsProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
 
-  .app-header h1 {
-    font-size: 17px;
-  }
+  const [activeCategory, setActiveCategory] =
+    useState<SongCategory>("govinda");
 
-  .menu-button svg {
-    width: 25px;
-    height: 25px;
-  }
+  const [nowPlayingIndex, setNowPlayingIndex] =
+    useState<number | null>(null);
 
-  .circle-control {
-    width: 36px;
-    height: 36px;
-    border-width: 2px;
-  }
+  const [playerSongs, setPlayerSongs] = useState<Song[]>(
+    songCategories[0].songs
+  );
 
-  .lyrics-list {
-    gap: 6px;
-    padding: 6px 4px 10px;
-  }
+  const [playerInitialIndex, setPlayerInitialIndex] =
+    useState(0);
 
-  .lyrics-card {
-    padding: 10px 8px;
-    -webkit-border-radius: 19px;
-    -moz-border-radius: 19px;
-    -ms-border-radius: 19px;
-    -o-border-radius: 19px;
-    border-radius: 19px;
-  }
+  const [playerRequestId, setPlayerRequestId] =
+    useState(0);
 
-  .names-lines {
-    font-size: 16px !important;
-    line-height: 1.5;
-  }
+  // Load saved favorites.
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(
+        FAVORITES_STORAGE_KEY
+      );
 
-  .chorus-line {
-    font-size: 15px !important;
-    line-height: 1.45;
-  }
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  .drawer-item {
-    gap: 18px;
-    padding: 10px 16px;
-    font-size: 17px;
-  }
-}
+  const stanzas = createStanzas();
 
-/* =========================================
-   STANDARD MOBILE
-========================================= */
+  const currentCategory = songCategories.find(
+    (category) => category.id === activeCategory
+  );
 
-@media (min-width: 381px) and (max-width: 600px) {
-  .lyrics-card {
-    padding: 11px 10px;
-  }
+  const currentSongs = currentCategory?.songs ?? [];
 
-  .names-lines {
-    font-size: 17px !important;
-  }
+  // Save favorites.
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        FAVORITES_STORAGE_KEY,
+        JSON.stringify(favorites)
+      );
+    } catch (error) {
+      console.error("Unable to save favorites:", error);
+    }
+  }, [favorites]);
 
-  .chorus-line {
-    font-size: 16px !important;
-  }
-}
+  // Add or remove favorites.
+  const toggleFavorite = (name: string) => {
+    setFavorites((previous) => {
+      if (previous.includes(name)) {
+        return previous.filter((item) => item !== name);
+      }
 
-/* =========================================
-   TABLETS
-========================================= */
+      return [...previous, name];
+    });
+  };
 
-@media (min-width: 601px) and (max-width: 1024px) {
-  .app-header {
-    height: 78px;
-    min-height: 78px;
-  }
+  // Select category.
+  const selectCategory = (category: SongCategory) => {
+    const selected = songCategories.find(
+      (item) => item.id === category
+    );
 
-  .lyrics-list {
-    gap: 9px;
-    padding: 9px 12px 15px;
-  }
+    if (!selected) return;
 
-  .lyrics-card {
-    width: 98%;
-    padding: 15px 16px;
-  }
+    setActiveCategory(category);
+    setShowFavorites(false);
+    setMenuOpen(false);
 
-  .names-lines {
-    font-size: 19px !important;
-    line-height: 1.5;
-  }
+    if (category === "govinda") {
+      setNowPlayingIndex(null);
+    } else {
+      setPlayerSongs(selected.songs);
+      setPlayerInitialIndex(0);
+      setNowPlayingIndex(0);
+      setPlayerRequestId((previous) => previous + 1);
+    }
+  };
 
-  .chorus-line {
-    font-size: 18px !important;
-  }
-}
+  // Open selected song player.
+  const openSongPlayer = (index: number) => {
+    if (index < 0 || index >= currentSongs.length) return;
 
-/* =========================================
-   DESKTOP
-========================================= */
+    setPlayerSongs(currentSongs);
+    setPlayerInitialIndex(index);
+    setNowPlayingIndex(index);
+    setPlayerRequestId((previous) => previous + 1);
 
-@media (min-width: 1025px) {
-  .app-header {
-    padding-left: 28px;
-    padding-right: 28px;
-  }
+    setShowFavorites(false);
+    setMenuOpen(false);
+  };
 
-  .lyrics-list {
-    gap: 10px;
-    padding: 10px 15px 20px;
-  }
+  // Open external page.
+  const openPage = (url: string) => {
+    if (
+      !url ||
+      url.includes("YOUR_") ||
+      url.includes("your-")
+    ) {
+      alert("Please configure this link first.");
+      return;
+    }
 
-  .lyrics-card {
-    width: 96%;
-    padding: 18px 20px;
-  }
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
-  .names-lines {
-    font-size: 20px !important;
-    line-height: 1.5;
-  }
+  // Favorites page.
+  const openFavorites = () => {
+    setShowFavorites(true);
+    setMenuOpen(false);
+    setNowPlayingIndex(null);
+  };
 
-  .chorus-line {
-    font-size: 18px !important;
-  }
-}
+  // Home page.
+  const openHome = () => {
+    setActiveCategory("govinda");
+    setShowFavorites(false);
+    setNowPlayingIndex(null);
+    setMenuOpen(false);
+  };
 
-/* =========================================
-   SAFE AREA
-========================================= */
+  return (
+    <main className="govinda-app">
 
-@supports (padding: env(safe-area-inset-bottom)) {
-  .govinda-app {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+      {/* PERSISTENT AUDIO PLAYER */}
+
+      <div
+        className={
+          nowPlayingIndex !== null
+            ? "fixed inset-0 z-50 block"
+            : "hidden"
+        }
+      >
+        <NowPlaying
+          songs={playerSongs}
+          initialIndex={playerInitialIndex}
+          requestId={playerRequestId}
+          onBack={() => {
+            setNowPlayingIndex(null);
+            setShowFavorites(false);
+            setMenuOpen(true);
+          }}
+        />
+      </div>
+
+      {/* APP TOOLBAR */}
+
+      <header className="app-header">
+        <button
+          className="menu-button"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+        >
+          <Menu size={37} strokeWidth={2} />
+        </button>
+
+        <h1>
+          {showFavorites
+            ? "My Favorites"
+            : currentCategory?.title}
+        </h1>
+
+        {showFavorites ? (
+          <button
+            className="circle-control"
+            onClick={openHome}
+            aria-label="Back to Home"
+          >
+            <ArrowLeft size={25} />
+          </button>
+        ) : activeCategory === "govinda" ? (
+          <button
+            className="circle-control"
+            onClick={() => openSongPlayer(0)}
+            aria-label="Play Govinda Namalu"
+          >
+            <Play size={27} fill="white" />
+          </button>
+        ) : null}
+      </header>
+
+      {/* NAVIGATION DRAWER */}
+
+      {menuOpen && (
+        <div className="drawer-layer">
+          <div
+            className="drawer-overlay"
+            onClick={() => setMenuOpen(false)}
+          />
+
+          <aside className="navigation-drawer">
+            <div className="drawer-banner">
+              <img
+                src="/images/venkateswara-banner.jpg"
+                alt="Lord Venkateswara Swamy"
+              />
+            </div>
+
+            <nav className="drawer-menu">
+              {songCategories.map((category) => (
+                <button
+                  key={category.id}
+                  className={`drawer-item ${
+                    !showFavorites &&
+                    activeCategory === category.id
+                      ? "selected"
+                      : ""
+                  }`}
+                  onClick={() => selectCategory(category.id)}
+                >
+                  <Home size={30} />
+                  <span>{category.title}</span>
+                </button>
+              ))}
+
+              <button
+                className={`drawer-item ${
+                  showFavorites ? "selected" : ""
+                }`}
+                onClick={openFavorites}
+              >
+                <Heart size={30} />
+                <span>
+                  My Favorites ({favorites.length})
+                </span>
+              </button>
+
+              <button
+                className="drawer-item"
+                onClick={() => openPage(MORE_APPS_URL)}
+              >
+                <LayoutGrid size={30} />
+                <span>More Apps</span>
+              </button>
+
+              <button
+                className="drawer-item"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onPrivacyClick?.();
+                }}
+              >
+                <LockKeyhole size={30} />
+                <span>Privacy Policy</span>
+              </button>
+            </nav>
+          </aside>
+        </div>
+      )}
+
+      {/* LYRICS SECTION */}
+
+      <section className="lyrics-list">
+        {showFavorites ? (
+          favorites.length > 0 ? (
+            favorites.map((name) => (
+              <article
+                className="lyrics-card"
+                key={name}
+              >
+                <p className="names-lines">
+                  <span>{name}</span>
+
+                  <button
+                    className="favorite-button active"
+                    onClick={() => toggleFavorite(name)}
+                    aria-label={`Remove ${name} from favorites`}
+                  >
+                    <Heart
+                      size={23}
+                      fill="currentColor"
+                    />
+                  </button>
+                </p>
+
+                <p className="chorus-line">
+                  {chorus}
+                </p>
+              </article>
+            ))
+          ) : (
+            <div className="empty-favorites">
+              <Heart size={55} />
+
+              <h2>No Favorites Yet</h2>
+
+              <p>
+                No favorite Govinda Namalu have been saved yet.
+              </p>
+
+              <button onClick={openHome}>
+                Explore Govinda Namalu
+              </button>
+            </div>
+          )
+        ) : activeCategory === "govinda" ? (
+          stanzas.map((stanza, index) => (
+            <article
+              className="lyrics-card"
+              key={index}
+            >
+              <p className="names-lines">
+                {stanza.map((name, nameIndex) => (
+                  <span
+                    key={nameIndex}
+                    className="namalu-item"
+                  >
+                    {name}{" "}
+                  </span>
+                ))}
+              </p>
+
+              <p className="chorus-line">
+                {chorus}
+              </p>
+            </article>
+          ))
+        ) : null}
+      </section>
+
+      {/* ANDROID NAVIGATION BAR */}
+
+      <div className="android-navigation">
+        <div className="navigation-handle" />
+      </div>
+
+    </main>
+  );
 }

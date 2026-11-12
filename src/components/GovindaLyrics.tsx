@@ -252,15 +252,14 @@ const FAVORITES_STORAGE_KEY =
   "govinda-namalu-favorites";
 
 // =========================================
-// GROUP GOVINDA NAMES INTO STANZAS
-// FOUR NAMES PER CARD
+// TWO GOVINDA NAMES PER CARD
 // =========================================
 
 function createStanzas() {
   const stanzas: string[][] = [];
 
-  for (let i = 0; i < names.length; i += 4) {
-    stanzas.push(names.slice(i, i + 4));
+  for (let i = 0; i < names.length; i += 2) {
+    stanzas.push(names.slice(i, i + 2));
   }
 
   return stanzas;
@@ -287,11 +286,9 @@ export default function GovindaLyrics({
   const [activeCategory, setActiveCategory] =
     useState<SongCategory>("govinda");
 
-  // Keep the audio player mounted when hidden.
   const [nowPlayingIndex, setNowPlayingIndex] =
     useState<number | null>(null);
 
-  // Active audio playlist.
   const [playerSongs, setPlayerSongs] = useState<Song[]>(
     songCategories[0].songs
   );
@@ -299,14 +296,10 @@ export default function GovindaLyrics({
   const [playerInitialIndex, setPlayerInitialIndex] =
     useState(0);
 
-  // New song selection request.
   const [playerRequestId, setPlayerRequestId] =
     useState(0);
 
-  // =========================================
-  // FAVORITES STORAGE
-  // =========================================
-
+  // Load saved favorites.
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(
@@ -327,7 +320,7 @@ export default function GovindaLyrics({
 
   const currentSongs = currentCategory?.songs ?? [];
 
-  // Save favorites automatically.
+  // Save favorites.
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -339,10 +332,7 @@ export default function GovindaLyrics({
     }
   }, [favorites]);
 
-  // =========================================
-  // ADD / REMOVE FAVORITES
-  // =========================================
-
+  // Add or remove favorites.
   const toggleFavorite = (name: string) => {
     setFavorites((previous) => {
       if (previous.includes(name)) {
@@ -353,10 +343,7 @@ export default function GovindaLyrics({
     });
   };
 
-  // =========================================
-  // SELECT SONG CATEGORY
-  // =========================================
-
+  // Select category.
   const selectCategory = (category: SongCategory) => {
     const selected = songCategories.find(
       (item) => item.id === category
@@ -369,10 +356,8 @@ export default function GovindaLyrics({
     setMenuOpen(false);
 
     if (category === "govinda") {
-      // Hide player without stopping existing audio.
       setNowPlayingIndex(null);
     } else {
-      // Select a new category and play its first song.
       setPlayerSongs(selected.songs);
       setPlayerInitialIndex(0);
       setNowPlayingIndex(0);
@@ -380,10 +365,7 @@ export default function GovindaLyrics({
     }
   };
 
-  // =========================================
-  // OPEN SELECTED SONG PLAYER
-  // =========================================
-
+  // Open selected song player.
   const openSongPlayer = (index: number) => {
     if (index < 0 || index >= currentSongs.length) return;
 
@@ -396,10 +378,7 @@ export default function GovindaLyrics({
     setMenuOpen(false);
   };
 
-  // =========================================
-  // OPEN EXTERNAL PAGE
-  // =========================================
-
+  // Open external page.
   const openPage = (url: string) => {
     if (
       !url ||
@@ -413,22 +392,14 @@ export default function GovindaLyrics({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // =========================================
-  // FAVORITES PAGE
-  // =========================================
-
+  // Favorites page.
   const openFavorites = () => {
     setShowFavorites(true);
     setMenuOpen(false);
-
-    // Hide player without stopping audio.
     setNowPlayingIndex(null);
   };
 
-  // =========================================
-  // HOME PAGE
-  // =========================================
-
+  // Home page.
   const openHome = () => {
     setActiveCategory("govinda");
     setShowFavorites(false);
@@ -436,16 +407,10 @@ export default function GovindaLyrics({
     setMenuOpen(false);
   };
 
-  // =========================================
-  // RENDER UI
-  // =========================================
-
   return (
     <main className="govinda-app">
 
-      {/* =====================================
-          PERSISTENT AUDIO PLAYER
-      ===================================== */}
+      {/* PERSISTENT AUDIO PLAYER */}
 
       <div
         className={
@@ -466,9 +431,7 @@ export default function GovindaLyrics({
         />
       </div>
 
-      {/* =====================================
-          APP TOOLBAR
-      ===================================== */}
+      {/* APP TOOLBAR */}
 
       <header className="app-header">
         <button
@@ -504,9 +467,7 @@ export default function GovindaLyrics({
         ) : null}
       </header>
 
-      {/* =====================================
-          NAVIGATION DRAWER
-      ===================================== */}
+      {/* NAVIGATION DRAWER */}
 
       {menuOpen && (
         <div className="drawer-layer">
@@ -575,14 +536,9 @@ export default function GovindaLyrics({
         </div>
       )}
 
-      {/* =====================================
-          LYRICS SECTION
-      ===================================== */}
+      {/* LYRICS SECTION */}
 
       <section className="lyrics-list">
-
-        {/* FAVORITES */}
-
         {showFavorites ? (
           favorites.length > 0 ? (
             favorites.map((name) => (
@@ -625,11 +581,7 @@ export default function GovindaLyrics({
               </button>
             </div>
           )
-
         ) : activeCategory === "govinda" ? (
-
-          /* GOVINDA NAMALU */
-
           stanzas.map((stanza, index) => (
             <article
               className="lyrics-card"
@@ -651,14 +603,10 @@ export default function GovindaLyrics({
               </p>
             </article>
           ))
-
         ) : null}
-
       </section>
 
-      {/* =====================================
-          ANDROID NAVIGATION BAR
-      ===================================== */}
+      {/* ANDROID NAVIGATION BAR */}
 
       <div className="android-navigation">
         <div className="navigation-handle" />
