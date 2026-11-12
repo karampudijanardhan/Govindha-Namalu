@@ -607,64 +607,46 @@ body {
 
   .names-lines,
   .chorus-line {
-    font-size: 21px;
+    font-size: 27px;
     line-height: 1.28;
   }
 
   .drawer-item {
     gap: 30px;
     padding: 0 20px;
-    font-size: 20px;
+    font-size: 29px;
   }
 }
+/* Lyrics card: reduce width and keep centered */
+.lyrics-card {
+  width: 90%;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px 12px;
+  box-sizing: border-box;
+}
 
-/* =========================================
-   RESPONSIVE TELUGU LYRICS FONT
-========================================= */
-
-/* Desktop and large screens */
+/* Telugu lyrics font size */
 .names-lines,
 .chorus-line {
-  font-size: clamp(17px, 2.2vw, 22px);
+  font-size: 20px;
   line-height: 1.5;
   overflow-wrap: break-word;
 }
 
-/* Tablets and mobile screens */
+/* Mobile screens */
 @media (max-width: 600px) {
-  .names-lines,
-  .chorus-line {
-    font-size: clamp(16px, 3.5vw, 19px);
-    line-height: 1.5;
-  }
-
   .lyrics-card {
-    padding: 14px 12px;
+    width: 94%;
+    padding: 13px 10px;
   }
-}
 
-/* Small Android phones */
-@media (max-width: 380px) {
   .names-lines,
   .chorus-line {
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
-  .lyrics-card {
-    padding: 12px 9px;
+    font-size: 20px;
   }
 }
-
-/* Very short screens */
-@media (max-height: 600px) {
-  .names-lines,
-  .chorus-line {
-    font-size: 15px;
-    line-height: 1.4;
-  }
-}
-
 /* =========================================
    RESPONSIVE APP HEADER
 ========================================= */
