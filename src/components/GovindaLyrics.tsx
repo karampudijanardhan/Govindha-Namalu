@@ -202,11 +202,10 @@ const songCategories: {
         title: "Kondalalo Nelakonna",
         src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna - SenSongsMp3.Co.mp3",
       },
-      {
-        title: "Nigama Nagamanta",
-        src: "/audio/Annamacharya-Keerthanalu/Nigama Nagamanta - SenSongsMp3.Co (1).mp3",
-        
-      },
+    {
+  title: "Nigama Nagamanta",
+  src: "/audio/Annamacharya-Keerthanalu/Nigama Nagamamta - SenSongsMp3.Co (1).mp3",
+},
       {
         title: "Podagantimayya Purusothama",
         src: "/audio/Annamacharya-Keerthanalu/Podagantimayya Purusothama - SenSongsMp3.Co.mp3",
