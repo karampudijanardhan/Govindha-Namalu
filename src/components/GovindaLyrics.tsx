@@ -1,18 +1,17 @@
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Menu,
   Play,
-  Square,
   Home,
-  Share2,
-  Star,
   LayoutGrid,
   LockKeyhole,
   Heart,
   ArrowLeft,
 } from "lucide-react";
+
+import NowPlaying from "./NowPlaying";
 
 const names = [
   "శ్రీనివాస గోవిందా",
@@ -128,10 +127,107 @@ const names = [
 const chorus =
   "గోవిందా గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
 
-const APP_URL = "https://your-actual-app-url.com";
+type Song = {
+  title: string;
+  src: string;
+};
 
-const RATE_URL =
-  "https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME";
+type SongCategory =
+  | "govinda"
+  | "suprabhatam"
+  | "stotram"
+  | "annamacharya";
+
+const songCategories: {
+  id: SongCategory;
+  title: string;
+  songs: Song[];
+}[] = [
+  {
+    id: "govinda",
+    title: "Govinda Namalu",
+    songs: [
+      {
+        title: "Govinda Namalu",
+        src: "/audio/govinda-namalu.mp3",
+      },
+    ],
+  },
+  {
+    id: "suprabhatam",
+    title: "Sri Venkateswara Suprabhatam",
+    songs: [
+      {
+        title: "Sri Venkateswara Suprabhatham",
+        src: "/audio/MS Subbulakshmi Sri Venkateswara Suprabhatham Lyrical Video.mp3",
+      },
+    ],
+  },
+  {
+    id: "stotram",
+    title: "Venkateswara Stotram",
+    songs: [
+      {
+        title: "Sri Venkatesha Stotram",
+        src: "/audio/Sri Venkatesha Stotram - Invoking the Lord's Mercy - ISKCON Bangalore Music.mp3",
+      },
+    ],
+  },
+  {
+    id: "annamacharya",
+    title: "Annamacharya Keerthanalu",
+    songs: [
+      {
+        title: "Adigo Alladigo",
+        src: "/audio/Annamacharya-Keerthanalu/Adigo Alladigo - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Antaryami Alasithi",
+        src: "/audio/Annamacharya-Keerthanalu/Antaryami Alasithi- SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Ee Mako",
+        src: "/audio/Annamacharya-Keerthanalu/Ee Mako - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Govindasritha",
+        src: "/audio/Annamacharya-Keerthanalu/Govindasritha - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Kalaganti Kalaganti",
+        src: "/audio/Annamacharya-Keerthanalu/Kalaganti Kalaganti - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Kondalalo Nelakonna",
+        src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Nigama Nagamanta",
+        src: "/audio/Annamacharya-Keerthanalu/Nigama Nagamanta - SenSongsMp3.Co (1).mp3",
+      },
+      {
+        title: "Podagantimayya Purusothama",
+        src: "/audio/Annamacharya-Keerthanalu/Podagantimayya Purusothama - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Telugu Padaniki",
+        src: "/audio/Annamacharya-Keerthanalu/Telugu Padaniki - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Tirumala Konda",
+        src: "/audio/Annamacharya-Keerthanalu/Tirumala konda Video song - Annamayya - Volga Devotional.mp3",
+      },
+      {
+        title: "Vinaro Bhagyamu",
+        src: "/audio/Annamacharya-Keerthanalu/Vinaro Bhagyamu - SenSongsMp3.Co.mp3",
+      },
+      {
+        title: "Vinnapalu Vinavale",
+        src: "/audio/Annamacharya-Keerthanalu/Vinnapalu Vinavale- SenSongsMp3.Co.mp3",
+      },
+    ],
+  },
+];
 
 const MORE_APPS_URL =
   "https://play.google.com/store/apps/developer?id=YOUR_DEVELOPER_ID";
@@ -157,11 +253,14 @@ interface GovindaLyricsProps {
 export default function GovindaLyrics({
   onPrivacyClick,
 }: GovindaLyricsProps) {
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  const [, setPlaying] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
+
+  const [activeCategory, setActiveCategory] =
+    useState<SongCategory>("govinda");
+
+  const [nowPlayingIndex, setNowPlayingIndex] =
+    useState<number | null>(null);
 
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
@@ -174,15 +273,25 @@ export default function GovindaLyrics({
 
   const stanzas = createStanzas();
 
-  // Save favorites whenever they change
+  const currentCategory = songCategories.find(
+    (category) => category.id === activeCategory
+  );
+
+  const currentSongs = currentCategory?.songs ?? [];
+
+  // Save favorites
   useEffect(() => {
-    localStorage.setItem(
-      FAVORITES_STORAGE_KEY,
-      JSON.stringify(favorites)
-    );
+    try {
+      localStorage.setItem(
+        FAVORITES_STORAGE_KEY,
+        JSON.stringify(favorites)
+      );
+    } catch (error) {
+      console.error("Unable to save favorites:", error);
+    }
   }, [favorites]);
 
-  // Add or remove a favorite
+  // Add or remove favorites
   const toggleFavorite = (name: string) => {
     setFavorites((previous) => {
       if (previous.includes(name)) {
@@ -193,50 +302,37 @@ export default function GovindaLyrics({
     });
   };
 
-  // Play song
-  const playSong = async () => {
-    if (!audioRef.current) return;
+  // Menu category navigation
+  const selectCategory = (category: SongCategory) => {
+    const selected = songCategories.find(
+      (item) => item.id === category
+    );
 
-    try {
-      await audioRef.current.play();
-      setPlaying(true);
-    } catch (error) {
-      console.error("Audio playback error:", error);
+    if (!selected) return;
+
+    setActiveCategory(category);
+    setShowFavorites(false);
+    setMenuOpen(false);
+
+    if (category === "govinda") {
+      // Govinda Namalu opens the lyrics screen
+      setNowPlayingIndex(null);
+    } else {
+      // Other categories open the player directly
+      setNowPlayingIndex(0);
     }
   };
 
-  // Stop song
-  const stopSong = () => {
-    if (!audioRef.current) return;
+  // Open a selected song from the song list
+  const openSongPlayer = (index: number) => {
+    if (index < 0 || index >= currentSongs.length) return;
 
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
-    setPlaying(false);
+    setNowPlayingIndex(index);
+    setShowFavorites(false);
+    setMenuOpen(false);
   };
 
-  // Share app
-  const shareApp = async () => {
-    const shareData = {
-      title: "Govinda Namalu",
-      text: "Listen to Sri Venkateswara Swamy Govinda Namalu.",
-      url: APP_URL,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(APP_URL);
-        alert("App link copied successfully!");
-      } else {
-        alert("Sharing is not supported on this device.");
-      }
-    } catch (error) {
-      console.log("Share cancelled or unavailable:", error);
-    }
-  };
-
-  // Open external pages
+  // Open external page
   const openPage = (url: string) => {
     if (
       !url ||
@@ -250,27 +346,42 @@ export default function GovindaLyrics({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Open favorites page
+  // Favorites page
   const openFavorites = () => {
     setShowFavorites(true);
     setMenuOpen(false);
+    setNowPlayingIndex(null);
   };
 
-  // Open home page
+  // Home page
   const openHome = () => {
-    setShowFavorites(false);
-    setMenuOpen(false);
+    selectCategory("govinda");
   };
+
+  // Dedicated Now Playing screen
+  if (nowPlayingIndex !== null) {
+    return (
+      <NowPlaying
+        songs={currentSongs}
+        initialIndex={nowPlayingIndex}
+        onBack={() => {
+          // Close the music player
+          setNowPlayingIndex(null);
+
+          // Always return to the main Govinda Namalu screen
+          setActiveCategory("govinda");
+
+          // Reset other navigation states
+          setShowFavorites(false);
+          setMenuOpen(false);
+        }}
+      />
+    );
+  }
+
 
   return (
     <main className="govinda-app">
-      <audio
-        ref={audioRef}
-        src="/audio/govinda-namalu.mp3"
-        preload="metadata"
-        onEnded={() => setPlaying(false)}
-      />
-
       {/* App toolbar */}
       <header className="app-header">
         <button
@@ -282,7 +393,9 @@ export default function GovindaLyrics({
         </button>
 
         <h1>
-          {showFavorites ? "My Favorites" : "Govinda Namalu"}
+          {showFavorites
+            ? "My Favorites"
+            : currentCategory?.title}
         </h1>
 
         {showFavorites ? (
@@ -293,25 +406,15 @@ export default function GovindaLyrics({
           >
             <ArrowLeft size={25} />
           </button>
-        ) : (
-          <>
-            <button
-              className="circle-control"
-              onClick={playSong}
-              aria-label="Play"
-            >
-              <Play size={27} fill="white" />
-            </button>
-
-            <button
-              className="circle-control"
-              onClick={stopSong}
-              aria-label="Stop"
-            >
-              <Square size={21} fill="white" />
-            </button>
-          </>
-        )}
+        ) : activeCategory === "govinda" ? (
+          <button
+            className="circle-control"
+            onClick={() => openSongPlayer(0)}
+            aria-label="Play Govinda Namalu"
+          >
+            <Play size={27} fill="white" />
+          </button>
+        ) : null}
       </header>
 
       {/* Navigation drawer */}
@@ -331,15 +434,21 @@ export default function GovindaLyrics({
             </div>
 
             <nav className="drawer-menu">
-              <button
-                className={`drawer-item ${
-                  !showFavorites ? "selected" : ""
-                }`}
-                onClick={openHome}
-              >
-                <Home size={35} fill="currentColor" />
-                <span>Home</span>
-              </button>
+              {songCategories.map((category) => (
+                <button
+                  key={category.id}
+                  className={`drawer-item ${
+                    !showFavorites &&
+                    activeCategory === category.id
+                      ? "selected"
+                      : ""
+                  }`}
+                  onClick={() => selectCategory(category.id)}
+                >
+                  <Home size={30} />
+                  <span>{category.title}</span>
+                </button>
+              ))}
 
               <button
                 className={`drawer-item ${
@@ -347,34 +456,15 @@ export default function GovindaLyrics({
                 }`}
                 onClick={openFavorites}
               >
-                <Heart size={35} />
+                <Heart size={30} />
                 <span>My Favorites ({favorites.length})</span>
-              </button>
-
-              <button
-                className="drawer-item"
-                onClick={() => {
-                  setMenuOpen(false);
-                  shareApp();
-                }}
-              >
-                <Share2 size={35} />
-                <span>Share</span>
-              </button>
-
-              <button
-                className="drawer-item"
-                onClick={() => openPage(RATE_URL)}
-              >
-                <Star size={35} fill="currentColor" />
-                <span>Rate</span>
               </button>
 
               <button
                 className="drawer-item"
                 onClick={() => openPage(MORE_APPS_URL)}
               >
-                <LayoutGrid size={35} />
+                <LayoutGrid size={30} />
                 <span>More Apps</span>
               </button>
 
@@ -385,7 +475,7 @@ export default function GovindaLyrics({
                   onPrivacyClick?.();
                 }}
               >
-                <LockKeyhole size={35} />
+                <LockKeyhole size={30} />
                 <span>Privacy Policy</span>
               </button>
             </nav>
@@ -393,89 +483,83 @@ export default function GovindaLyrics({
         </div>
       )}
 
-      {/* Lyrics section */}
-      <section className="lyrics-list">
-        {showFavorites ? (
-          favorites.length > 0 ? (
-            favorites.map((name) => (
-              <article className="lyrics-card" key={name}>
-                <p className="names-lines">
-                  <span>{name}</span>
+     {/* Lyrics and songs section */}
+<section className="lyrics-list">
+  {showFavorites ? (
+    favorites.length > 0 ? (
+      favorites.map((name) => (
+        <article className="lyrics-card" key={name}>
+          <p className="names-lines">
+            <span>{name}</span>
 
-                  <button
-                    className="favorite-button active"
-                    onClick={() => toggleFavorite(name)}
-                    aria-label={`Remove ${name} from favorites`}
-                  >
-                    <Heart
-                      size={23}
-                      fill="currentColor"
-                    />
-                  </button>
-                </p>
+            <button
+              className="favorite-button active"
+              onClick={() => toggleFavorite(name)}
+              aria-label={`Remove ${name} from favorites`}
+            >
+              <Heart size={23} fill="currentColor" />
+            </button>
+          </p>
 
-                <p className="chorus-line">{chorus}</p>
-              </article>
-            ))
-          ) : (
-            <div className="empty-favorites">
-              <Heart size={55} />
-              <h2>No Favorites Yet</h2>
-              <p>
-                Tap the heart icon beside any Govinda Namalu
-                to save it here.
-              </p>
+          <p className="chorus-line">{chorus}</p>
+        </article>
+      ))
+    ) : (
+      <div className="empty-favorites">
+        <Heart size={55} />
+        <h2>No Favorites Yet</h2>
+        <p>No favorite Govinda Namalu have been saved yet.</p>
 
-              <button onClick={openHome}>
-                Explore Govinda Namalu
-              </button>
-            </div>
-          )
-        ) : (
-          stanzas.map((stanza, index) => (
-            <article className="lyrics-card" key={index}>
-              <p className="names-lines">
-                {stanza.map((name) => (
-                  <span
-                    key={name}
-                    className="namalu-item"
-                  >
-                    <span>{name}</span>
-
-                    <button
-                      className={`favorite-button ${
-                        favorites.includes(name) ? "active" : ""
-                      }`}
-                      onClick={() => toggleFavorite(name)}
-                      aria-label={
-                        favorites.includes(name)
-                          ? `Remove ${name} from favorites`
-                          : `Add ${name} to favorites`
-                      }
-                    >
-                      <Heart
-                        size={21}
-                        fill={
-                          favorites.includes(name)
-                            ? "currentColor"
-                            : "none"
-                        }
-                      />
-                    </button>
-                  </span>
-                ))}
-              </p>
-
-              <p className="chorus-line">{chorus}</p>
-            </article>
-          ))
-        )}
-      </section>
-
-      {/* Android-style navigation bar */}
-      <div className="android-navigation">
-        <div className="navigation-handle" />
+        <button onClick={openHome}>
+          Explore Govinda Namalu
+        </button>
       </div>
+    )
+  ) : activeCategory === "govinda" ? (
+    stanzas.map((stanza, index) => (
+      <article className="lyrics-card" key={index}>
+        <p className="names-lines">
+          {stanza.map((name) => (
+            <span key={name} className="namalu-item">
+              <span>{name}</span>
+            </span>
+          ))}
+        </p>
+
+        <p className="chorus-line">{chorus}</p>
+      </article>
+    ))
+  ) : (
+    songCategories
+      .find((category) => category.id === activeCategory)
+      ?.songs.map((song) => (
+        <article className="lyrics-card" key={song.src}>
+          <p className="names-lines">
+            <span>{song.title}</span>
+
+            <button
+              className="circle-control"
+              onClick={() => playSelectedSong(song)}
+              aria-label={`Play ${song.title}`}
+            >
+              <Play size={22} fill="white" />
+            </button>
+          </p>
+
+          <p className="chorus-line">
+            {selectedSong.src === song.src
+              ? "Selected song"
+              : "Tap play to listen"}
+          </p>
+        </article>
+      ))
+  )}
+</section>
+
+{/* Android-style navigation bar */}
+<div className="android-navigation">
+  <div className="navigation-handle" />
+</div>
     </main>
   );
 }

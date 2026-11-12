@@ -1,5 +1,15 @@
-@import "tailwindcss";
+
+/* =========================================
+   IMPORTS
+========================================= */
+
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* =========================================
+   GLOBAL STYLES
+========================================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -22,10 +32,13 @@ body {
   min-height: 100vh;
   width: 100%;
   background: #afd0d2;
-  padding-bottom: 55px;
+  padding-bottom: 45px;
 }
 
-/* Top status bar */
+/* =========================================
+   TOP STATUS BAR
+========================================= */
+
 .status-bar {
   height: 72px;
   width: 100%;
@@ -48,18 +61,28 @@ body {
   white-space: nowrap;
 }
 
-/* Yellow app toolbar */
+/* =========================================
+   YELLOW APP HEADER
+   Updated to match first screenshot
+========================================= */
+
 .app-header {
-  height: 112px;
+  height: 86px;
+  min-height: 86px;
   width: 100%;
+
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+
   gap: 12px;
-  padding: 0 24px;
+  padding: 0 22px;
+
   background: #ffc107;
   color: #fff;
+
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+
   position: sticky;
   top: 0;
   z-index: 10;
@@ -67,19 +90,27 @@ body {
 
 .app-header h1 {
   flex: 1;
+  margin: 0;
+
   text-align: center;
   font-family: Arial, sans-serif;
-  font-size: clamp(22px, 4.5vw, 38px);
+
+  font-size: clamp(21px, 4vw, 30px);
   font-weight: 600;
+
   white-space: nowrap;
 }
+
+/* Header buttons */
 
 .menu-button,
 .circle-control {
   flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: none;
   background: transparent;
   color: #fff;
@@ -90,10 +121,16 @@ body {
   padding: 5px;
 }
 
+.menu-button svg {
+  width: 32px;
+  height: 32px;
+}
+
 .circle-control {
-  width: 64px;
-  height: 64px;
-  border: 5px solid #fff;
+  width: 50px;
+  height: 50px;
+
+  border: 4px solid #fff;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -101,331 +138,156 @@ body {
   border-radius: 50%;
 }
 
-/* Menu */
+/* =========================================
+   MENU
+========================================= */
+
 .menu-panel {
   position: absolute;
-  top: 190px;
+  top: 100px;
   left: 12px;
   z-index: 30;
+
   width: 230px;
   padding: 12px;
+
   background: #f7f6fc;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   -ms-border-radius: 15px;
   -o-border-radius: 15px;
   border-radius: 15px;
+
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
 }
 
 .menu-panel button {
   display: block;
   width: 100%;
+
   border: none;
   background: transparent;
+
   padding: 13px;
+
   text-align: left;
   color: #669f62;
   font-size: 16px;
+
   cursor: pointer;
 }
 
-/* Lyrics layout */
+/* =========================================
+   LYRICS LIST
+   Compact card spacing
+========================================= */
+
 .lyrics-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 4px 4px 20px;
+
+  gap: 7px;
+  padding: 4px 3px 15px;
 }
+
+/* =========================================
+   LYRICS CARDS
+   Updated to match first screenshot
+========================================= */
 
 .lyrics-card {
   width: 100%;
-  min-height: 208px;
-  padding: 25px 20px;
-  -webkit-border-radius: 38px;
-  -moz-border-radius: 38px;
-  -ms-border-radius: 38px;
-  -o-border-radius: 38px;
-  border-radius: 38px;
+
+  min-height: 0;
+  height: auto;
+
+  padding: 17px 16px;
+
+  -webkit-border-radius: 28px;
+  -moz-border-radius: 28px;
+  -ms-border-radius: 28px;
+  -o-border-radius: 28px;
+  border-radius: 28px;
   background: #f7f6fc;
+
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   text-align: center;
 }
 
+/* =========================================
+   TELUGU LYRICS TEXT
+========================================= */
+
 .names-lines,
 .chorus-line {
+  width: 100%;
+
   color: #6f9f6b;
   font-family: "Noto Sans Telugu", sans-serif;
-  font-size: clamp(23px, 4.4vw, 38px);
+
+  font-size: clamp(22px, 4.4vw, 27px);
   font-weight: 500;
-  line-height: 1.48;
+
+  line-height: 1.28;
   text-align: center;
+}
+
+.names-lines {
+  margin: 0;
+  padding: 0;
 }
 
 .names-lines span {
   display: inline;
 }
 
+/* Chorus */
+
 .chorus-line {
-  margin-top: 0;
+  margin-top: 3px;
+  padding: 0;
 }
 
-/* Android bottom navigation */
-.android-navigation {
-  height: 35px;
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 50;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* =========================================
+   INDIVIDUAL GOVINDA NAMALU
+========================================= */
 
-.navigation-handle {
-  width: 108px;
-  height: 5px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -ms-border-radius: 20px;
-  -o-border-radius: 20px;
-  border-radius: 20px;
-  background: #929292;
-}
-
-/* Mobile sizing */
-@media (max-width: 600px) {
-  .status-bar {
-    height: 72px;
-    padding: 0 7%;
-    font-size: 22px;
-  }
-
-  .status-right {
-    font-size: 16px;
-  }
-
-  .app-header {
-    height: 112px;
-    padding: 0 12px;
-    gap: 8px;
-  }
-
-  .app-header h1 {
-    font-size: clamp(19px, 5.2vw, 28px);
-  }
-
-  .circle-control {
-    width: 62px;
-    height: 62px;
-  }
-
-  .lyrics-list {
-    gap: 8px;
-    padding: 4px 4px 20px;
-  }
-
-  .lyrics-card {
-    min-height: 208px;
-    padding: 20px 15px;
-    -webkit-border-radius: 36px;
-    -moz-border-radius: 36px;
-    -ms-border-radius: 36px;
-    -o-border-radius: 36px;
-    border-radius: 36px;
-  }
-
-  .names-lines,
-  .chorus-line {
-    font-size: clamp(22px, 5.1vw, 29px);
-    line-height: 1.48;
-  }
-}
-
-@media (max-width: 380px) {
-  .app-header {
-    padding: 0 7px;
-    gap: 5px;
-  }
-
-  .app-header h1 {
-    font-size: 18px;
-  }
-
-  .circle-control {
-    width: 49px;
-    height: 49px;
-    border-width: 4px;
-  }
-
-  .menu-button svg {
-    width: 29px;
-  }
-
-  .lyrics-card {
-    min-height: 185px;
-  }
-
-  .names-lines,
-  .chorus-line {
-    font-size: 21px;
-  }
-}
-
-/* ===== LEFT NAVIGATION DRAWER ===== */
-
-.drawer-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-}
-
-.drawer-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.navigation-drawer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 35px;
-  width: 78%;
-  max-width: 580px;
-  background: #fafafa;
-  overflow-y: auto;
-  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.18);
-  -webkit-animation: drawerSlide 0.25s ease-out;
-  animation: drawerSlide 0.25s ease-out;
-}
-
-.drawer-banner {
-  width: 100%;
-  height: 270px;
-  background: #ffc107;
-  overflow: hidden;
-}
-
-.drawer-banner img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.drawer-menu {
-  padding-top: 10px;
-}
-
-.drawer-item {
-  width: 100%;
-  height: 100px;
-  padding: 0 35px;
-  display: flex;
-  align-items: center;
-  gap: 70px;
-  border: none;
-  background: #fafafa;
-  color: #252525;
-  font-family: Arial, sans-serif;
-  font-size: 27px;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-}
-
-.drawer-item svg {
-  flex-shrink: 0;
-  color: #666;
-}
-
-.drawer-item.selected {
-  background: #dedede;
-  color: #ffc107;
-}
-
-.drawer-item.selected svg {
-  color: #ffc107;
-}
-
-.drawer-item:active {
-  background: #eeeeee;
-}
-
-@keyframes drawerSlide {
-  from {
-    -webkit-transform: translateX(-100%);
-    -moz-transform: translateX(-100%);
-    -ms-transform: translateX(-100%);
-    -o-transform: translateX(-100%);
-    transform: translateX(-100%);
-  }
-
-  to {
-    -webkit-transform: translateX(0);
-    -moz-transform: translateX(0);
-    -ms-transform: translateX(0);
-    -o-transform: translateX(0);
-    transform: translateX(0);
-  }
-}
-
-@media (max-width: 600px) {
-  .navigation-drawer {
-    width: 78%;
-  }
-
-  .drawer-banner {
-    height: 270px;
-  }
-
-  .drawer-item {
-    height: 100px;
-    padding: 0 28px;
-    gap: 48px;
-    font-size: 23px;
-  }
-
-  .drawer-item svg {
-    width: 34px;
-    height: 34px;
-  }
-}
-
-@media (max-width: 380px) {
-  .drawer-item {
-    gap: 30px;
-    padding: 0 20px;
-    font-size: 20px;
-  }
-}
-
-/* Individual Govinda Namalu */
 .namalu-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin: 4px 8px 4px 0;
+  display: inline;
+  align-items: initial;
+
+  gap: 0;
+  margin: 0 5px 0 0;
+  padding: 0;
 }
 
-/* Favorite button */
+.namalu-item > span {
+  display: inline;
+}
+
+/* =========================================
+   FAVORITE BUTTON
+   Retained for Favorites screen
+========================================= */
+
 .favorite-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   border: none;
   background: transparent;
+
   color: #777;
   cursor: pointer;
   padding: 5px;
+
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -450,7 +312,10 @@ body {
   color: #e53935;
 }
 
-/* Empty favorites */
+/* =========================================
+   EMPTY FAVORITES
+========================================= */
+
 .empty-favorites {
   text-align: center;
   padding: 45px 20px;
@@ -471,6 +336,7 @@ body {
 .empty-favorites button {
   margin-top: 15px;
   padding: 12px 22px;
+
   border: none;
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
@@ -480,7 +346,274 @@ body {
   cursor: pointer;
 }
 
-/* Keep lyrics readable */
-.names-lines {
-  line-height: 2;
+/* =========================================
+   ANDROID BOTTOM NAVIGATION
+========================================= */
+
+.android-navigation {
+  height: 35px;
+  width: 100%;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  z-index: 50;
+
+  background: #000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation-handle {
+  width: 108px;
+  height: 5px;
+
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  border-radius: 20px;
+  background: #929292;
+}
+
+/* =========================================
+   LEFT NAVIGATION DRAWER
+========================================= */
+
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+.drawer-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.navigation-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 35px;
+
+  width: 78%;
+  max-width: 580px;
+
+  background: #fafafa;
+  overflow-y: auto;
+
+  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.18);
+
+  -webkit-animation: drawerSlide 0.25s ease-out;
+  animation: drawerSlide 0.25s ease-out;
+}
+
+.drawer-banner {
+  width: 100%;
+  height: 270px;
+
+  background: #ffc107;
+  overflow: hidden;
+}
+
+.drawer-banner img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  display: block;
+}
+
+.drawer-menu {
+  padding-top: 10px;
+}
+
+.drawer-item {
+  width: 100%;
+  height: 100px;
+
+  padding: 0 35px;
+
+  display: flex;
+  align-items: center;
+  gap: 70px;
+
+  border: none;
+  background: #fafafa;
+
+  color: #252525;
+  font-family: Arial, sans-serif;
+  font-size: 27px;
+  font-weight: 500;
+
+  text-align: left;
+  cursor: pointer;
+}
+
+.drawer-item svg {
+  flex-shrink: 0;
+  color: #666;
+}
+
+.drawer-item.selected {
+  background: #dedede;
+  color: #ffc107;
+}
+
+.drawer-item.selected svg {
+  color: #ffc107;
+}
+
+.drawer-item:active {
+  background: #eeeeee;
+}
+
+/* Drawer animation */
+
+@keyframes drawerSlide {
+  from {
+    -webkit-transform: translateX(-100%);
+    -moz-transform: translateX(-100%);
+    -ms-transform: translateX(-100%);
+    -o-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+
+  to {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .app-header {
+    height: 86px;
+    min-height: 86px;
+
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .app-header h1 {
+    font-size: clamp(19px, 5vw, 25px);
+  }
+
+  .menu-button svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .circle-control {
+    width: 49px;
+    height: 49px;
+    border-width: 4px;
+  }
+
+  .lyrics-list {
+    gap: 7px;
+    padding: 4px 3px 12px;
+  }
+
+  .lyrics-card {
+    min-height: 0;
+    padding: 17px 14px;
+    -webkit-border-radius: 27px;
+    -moz-border-radius: 27px;
+    -ms-border-radius: 27px;
+    -o-border-radius: 27px;
+    border-radius: 27px;
+  }
+
+  .names-lines,
+  .chorus-line {
+    font-size: clamp(21px, 5vw, 26px);
+    line-height: 1.28;
+  }
+
+  .chorus-line {
+    margin-top: 3px;
+  }
+
+  /* Navigation drawer */
+
+  .navigation-drawer {
+    width: 78%;
+  }
+
+  .drawer-banner {
+    height: 270px;
+  }
+
+  .drawer-item {
+    height: 100px;
+    padding: 0 28px;
+    gap: 48px;
+    font-size: 23px;
+  }
+
+  .drawer-item svg {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE SCREENS
+========================================= */
+
+@media (max-width: 380px) {
+
+  .app-header {
+    padding: 0 7px;
+    gap: 5px;
+  }
+
+  .app-header h1 {
+    font-size: 18px;
+  }
+
+  .circle-control {
+    width: 45px;
+    height: 45px;
+    border-width: 3px;
+  }
+
+  .menu-button svg {
+    width: 27px;
+  }
+
+  .lyrics-card {
+    min-height: 0;
+    padding: 15px 11px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
+    -ms-border-radius: 24px;
+    -o-border-radius: 24px;
+    border-radius: 24px;
+  }
+
+  .names-lines,
+  .chorus-line {
+    font-size: 21px;
+    line-height: 1.28;
+  }
+
+  .drawer-item {
+    gap: 30px;
+    padding: 0 20px;
+    font-size: 20px;
+  }
 }
