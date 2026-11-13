@@ -10,39 +10,33 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
   const email = "janardhankarampudi@gmail.com";
 
   return (
-    <main className="min-h-screen w-full bg-white text-[#222]">
-      <div className="mx-auto min-h-screen w-full max-w-5xl px-4 py-5 sm:px-8 sm:py-8 lg:px-14 lg:py-10">
-
-        {/* Header */}
-        <header className="relative mb-8 flex min-h-12 items-center justify-center sm:mb-10">
-          {onBack && (
+    <main className="min-h-screen w-full overflow-x-hidden bg-white text-[#222]">
+     <div className="mx-auto min-h-screen w-full max-w-5xl px-4 py-5 sm:px-6 sm:py-8 lg:px-10 lg:py-10">        {/* Header */}
+        <header className="mb-7 grid grid-cols-[40px_minmax(0,1fr)_40px] items-center gap-2 sm:mb-10">
+          {onBack ? (
             <button
               type="button"
               onClick={onBack}
               aria-label="Go back"
-              className="absolute left-0 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-2 focus:ring-gray-400 sm:h-11 sm:w-11"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:h-11 sm:w-11"
             >
-              <ArrowLeft size={20} strokeWidth={2} />
+              <ArrowLeft size={21} />
             </button>
+          ) : (
+            <div />
           )}
 
-          <h1 className="px-12 text-center font-serif text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
+          <h1 className="min-w-0 text-center font-serif text-2xl font-bold tracking-tight text-[#222] sm:text-3xl md:text-4xl">
             Privacy Policy
           </h1>
 
-          <span
-            role="img"
-            aria-label="Indian flag"
-            className="absolute right-0 text-2xl sm:text-3xl"
-          >
-            Indian
-          </span>
+          <div />
         </header>
 
-        {/* Policy content */}
-        <article className="mx-auto w-full max-w-4xl font-serif text-[14px] leading-7 text-gray-800 sm:text-[15px] sm:leading-8 lg:text-base">
+        {/* Privacy Policy Content */}
+        <article className="mx-auto w-full max-w-4xl break-words font-serif text-[15px] leading-7 text-gray-800 sm:text-base sm:leading-8 lg:text-lg">
 
-          <p className="mb-7 text-justify">
+          <p className="mb-7 text-left">
             We respect your privacy and are committed to protecting your
             personal information. This Privacy Policy outlines how we
             collect, use, disclose, and safeguard your personal data when
@@ -51,7 +45,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </p>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>1. ORGANIZATION AND SCOPE.</strong>{" "}
               Govinda Namalu is a devotional application dedicated to
               Sri Venkateswara Swamy. This Privacy Policy explains how
@@ -61,13 +55,13 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>2. INFORMATION COLLECTED.</strong>{" "}
               Depending on the features you use, the application may
               process certain information, including:
             </p>
 
-            <ul className="mt-3 list-disc space-y-2 pl-6 sm:pl-8">
+            <ul className="mt-3 list-disc space-y-3 pl-5 sm:pl-7">
               <li>
                 <strong>Personal information:</strong> Information you
                 voluntarily provide, such as your name or email address.
@@ -88,7 +82,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>3. AUDIO AND LYRICS.</strong>{" "}
               The application provides devotional songs and Govinda
               Namalu lyrics for personal and devotional use.
@@ -96,7 +90,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>4. USE OF INFORMATION.</strong>{" "}
               Information, where collected, may be used to provide
               application features, improve performance, and respond
@@ -105,7 +99,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>5. SHARING OF INFORMATION.</strong>{" "}
               We do not sell personal information. Information may be
               shared with service providers only where necessary to
@@ -114,7 +108,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>6. THIRD-PARTY SERVICES.</strong>{" "}
               The application may use third-party services for hosting,
               analytics, or other features. Their privacy practices are
@@ -123,7 +117,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>7. CHILDREN'S PRIVACY.</strong>{" "}
               We do not knowingly collect personal information from
               children without appropriate consent.
@@ -131,7 +125,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>8. DATA SECURITY.</strong>{" "}
               Reasonable measures are taken to protect information.
               However, no electronic storage or transmission method
@@ -140,7 +134,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-6">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>9. POLICY UPDATES.</strong>{" "}
               This Privacy Policy may be updated from time to time.
               Changes will be reflected on this page.
@@ -148,7 +142,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
           </section>
 
           <section className="mb-8">
-            <p className="text-justify">
+            <p className="text-left">
               <strong>10. CONTACT US.</strong>{" "}
               If you have any questions regarding this Privacy Policy,
               contact us at:
@@ -156,17 +150,19 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
 
             <a
               href={`mailto:${email}`}
-              className="mt-2 inline-block break-all font-semibold text-blue-700 underline underline-offset-2"
+              className="mt-3 inline-block max-w-full break-all font-semibold text-blue-700 underline underline-offset-2"
             >
               {email}
             </a>
           </section>
 
+          {/* Footer */}
           <footer className="border-t border-gray-300 pt-5 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 sm:text-base">
               Effective Date: November 13, 2026
             </p>
-            <p className="mt-3 pb-5 font-semibold">
+
+            <p className="mt-3 pb-5 font-semibold text-base sm:text-lg">
               Govinda Govinda 🙏
             </p>
           </footer>

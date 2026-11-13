@@ -307,10 +307,6 @@ const Wallpapers: React.FC<WallpapersProps> = ({
               Choose your favourite Swamy wallpaper
             </p>
           </div>
-
-          <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-bold shadow-sm">
-            {wallpapers.length} Images
-          </span>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">

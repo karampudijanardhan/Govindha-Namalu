@@ -261,7 +261,7 @@ const songCategories: {
       },
       {
         title: "Kondalalo Nelakonna",
-        src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna.mp3",
+        src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna - SenSongsMp3.Co.mp3",
       },
       {
         title: "Nigama Nagamanta",
