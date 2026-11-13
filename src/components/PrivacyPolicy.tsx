@@ -1,226 +1,177 @@
 
 import React from "react";
-import {
-  ArrowLeft,
-  ShieldCheck,
-  Heart,
-  Music,
-  Database,
-  Share2,
-  Baby,
-  Lock,
-  RefreshCw,
-  Mail,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 interface PrivacyPolicyProps {
   onBack?: () => void;
 }
 
-const sections = [
-  {
-    icon: Database,
-    title: "1. Information We Collect",
-    content:
-      "You do not need to create an account or provide personal details to use Govinda Namalu.",
-  },
-  {
-    icon: Music,
-    title: "2. Audio and Lyrics",
-    content:
-      "You can read Govinda Namalu lyrics and listen to devotional songs directly in the app.",
-  },
-  {
-    icon: Share2,
-    title: "3. Sharing",
-    content:
-      "When you share our app, your device opens its sharing options. You choose how to share it.",
-  },
-  {
-    icon: Lock,
-    title: "4. Third-Party Services",
-    content:
-      "External websites or services may have their own privacy policies. Please check them before using them.",
-  },
-  {
-    icon: Baby,
-    title: "5. Children's Privacy",
-    content:
-      "We do not intentionally collect children's personal information through this app.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "6. Data Security",
-    content:
-      "We aim to provide a simple and privacy-conscious experience. Please keep your device updated.",
-  },
-  {
-    icon: RefreshCw,
-    title: "7. Policy Updates",
-    content:
-      "We may update this policy when our app or privacy practices change. Please check this page for updates.",
-  },
-];
-
 const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
+  const email = "janardhankarampudi@gmail.com";
+
   return (
-    <main className="min-h-screen w-full overflow-x-hidden bg-[#afd0d2] text-[#292929]">
+    <main className="min-h-screen w-full bg-white text-[#222]">
+      <div className="mx-auto min-h-screen w-full max-w-5xl px-4 py-5 sm:px-8 sm:py-8 lg:px-14 lg:py-10">
 
-      {/* Header */}
-      <header className="relative w-full bg-[#ffc107] px-5 py-10 text-center shadow-md sm:py-14">
+        {/* Header */}
+        <header className="relative mb-8 flex min-h-12 items-center justify-center sm:mb-10">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Go back"
+              className="absolute left-0 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-2 focus:ring-gray-400 sm:h-11 sm:w-11"
+            >
+              <ArrowLeft size={20} strokeWidth={2} />
+            </button>
+          )}
 
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-[#333333] shadow-sm transition hover:bg-[#fff4c2]"
+          <h1 className="px-12 text-center font-serif text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
+            Privacy Policy
+          </h1>
+
+          <span
+            role="img"
+            aria-label="Indian flag"
+            className="absolute right-0 text-2xl sm:text-3xl"
           >
-            <ArrowLeft size={18} />
-            Back
-          </button>
-        )}
+            Indian
+          </span>
+        </header>
 
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-[#fff4c2]">
-          <ShieldCheck size={34} className="text-[#A87900]" />
-        </div>
+        {/* Policy content */}
+        <article className="mx-auto w-full max-w-4xl font-serif text-[14px] leading-7 text-gray-800 sm:text-[15px] sm:leading-8 lg:text-base">
 
-        <h1 className="mt-5 text-3xl font-extrabold text-[#292929] sm:text-5xl">
-          Privacy Policy
-        </h1>
-
-        <h2 className="mt-2 text-lg font-bold text-[#4D3B0A] sm:text-xl">
-          Govinda Namalu
-        </h2>
-
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[#4D3B0A] sm:text-base">
-          Your privacy is important to us. Read how we handle
-          information while you enjoy devotional songs and lyrics.
-        </p>
-
-        <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#574515] shadow-sm">
-          <Lock size={15} />
-          Privacy & Security
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="mx-auto w-full max-w-[1500px] px-4 py-7 sm:px-8 sm:py-10 lg:px-12">
-
-        {/* Welcome Card */}
-        <section className="rounded-2xl bg-white p-5 shadow-sm sm:p-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#fff4c2]">
-              <Heart size={25} className="text-[#A87900]" />
-            </div>
-
-            <div>
-              <h2 className="text-xl font-extrabold text-[#292929] sm:text-2xl">
-                Welcome Devotees
-              </h2>
-              <p className="text-sm text-gray-500">
-                A simple devotional experience
-              </p>
-            </div>
-          </div>
-
-          <p className="mt-5 text-sm leading-7 text-gray-700 sm:text-base">
-            Welcome to Govinda Namalu. This app helps you read
-            Sri Venkateswara Swamy Govinda Namalu and listen to
-            devotional songs. We respect your privacy.
+          <p className="mb-7 text-justify">
+            We respect your privacy and are committed to protecting your
+            personal information. This Privacy Policy outlines how we
+            collect, use, disclose, and safeguard your personal data when
+            you use our Govinda Namalu application. It also explains your
+            rights and choices regarding your personal information.
           </p>
 
-          <div className="mt-5 rounded-xl bg-[#e5ffff] p-4">
-            <p className="text-sm font-bold text-[#574515]">
-              Effective Date: November 11, 2026
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>1. ORGANIZATION AND SCOPE.</strong>{" "}
+              Govinda Namalu is a devotional application dedicated to
+              Sri Venkateswara Swamy. This Privacy Policy explains how
+              information is handled when you use our application and
+              its features.
             </p>
-          </div>
-        </section>
+          </section>
 
-        {/* Policy Heading */}
-        <section className="mb-6 mt-10">
-          <h2 className="text-2xl font-extrabold text-[#292929] sm:text-3xl">
-            Privacy Information
-          </h2>
-          <p className="mt-2 text-sm text-gray-600 sm:text-base">
-            Here is how we protect your privacy.
-          </p>
-        </section>
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>2. INFORMATION COLLECTED.</strong>{" "}
+              Depending on the features you use, the application may
+              process certain information, including:
+            </p>
 
-        {/* Responsive Cards */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {sections.map((section) => {
-            const Icon = section.icon;
+            <ul className="mt-3 list-disc space-y-2 pl-6 sm:pl-8">
+              <li>
+                <strong>Personal information:</strong> Information you
+                voluntarily provide, such as your name or email address.
+              </li>
+              <li>
+                <strong>Device information:</strong> Basic device and
+                application information where applicable.
+              </li>
+              <li>
+                <strong>Usage information:</strong> Information about
+                how you interact with application features, where collected.
+              </li>
+              <li>
+                <strong>Favorites:</strong> Your saved favorite songs,
+                stored locally on your device if local storage is used.
+              </li>
+            </ul>
+          </section>
 
-            return (
-              <article
-                key={section.title}
-                className="rounded-2xl border border-[#d5e5e5] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:p-6"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#e5ffff]">
-                  <Icon size={24} className="text-[#A87900]" />
-                </div>
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>3. AUDIO AND LYRICS.</strong>{" "}
+              The application provides devotional songs and Govinda
+              Namalu lyrics for personal and devotional use.
+            </p>
+          </section>
 
-                <h3 className="mt-4 text-lg font-bold text-[#292929]">
-                  {section.title}
-                </h3>
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>4. USE OF INFORMATION.</strong>{" "}
+              Information, where collected, may be used to provide
+              application features, improve performance, and respond
+              to user enquiries.
+            </p>
+          </section>
 
-                <div className="mt-3 h-1 w-10 rounded-full bg-[#ffc107]" />
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>5. SHARING OF INFORMATION.</strong>{" "}
+              We do not sell personal information. Information may be
+              shared with service providers only where necessary to
+              operate the application or comply with legal requirements.
+            </p>
+          </section>
 
-                <p className="mt-4 text-sm leading-7 text-gray-600 sm:text-base">
-                  {section.content}
-                </p>
-              </article>
-            );
-          })}
-        </div>
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>6. THIRD-PARTY SERVICES.</strong>{" "}
+              The application may use third-party services for hosting,
+              analytics, or other features. Their privacy practices are
+              governed by their respective policies.
+            </p>
+          </section>
 
-        {/* Contact */}
-        <section className="mt-10 rounded-2xl bg-[#ffc107] p-6 shadow-sm sm:p-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
-              <Mail size={24} className="text-[#A87900]" />
-            </div>
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>7. CHILDREN'S PRIVACY.</strong>{" "}
+              We do not knowingly collect personal information from
+              children without appropriate consent.
+            </p>
+          </section>
 
-            <h2 className="text-xl font-extrabold text-[#292929] sm:text-2xl">
-              Contact Us
-            </h2>
-          </div>
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>8. DATA SECURITY.</strong>{" "}
+              Reasonable measures are taken to protect information.
+              However, no electronic storage or transmission method
+              can be guaranteed to be completely secure.
+            </p>
+          </section>
 
-          <p className="mt-4 text-sm leading-7 text-[#4D3B0A] sm:text-base">
-            Have questions about our Privacy Policy? Contact us
-            through the email below.
-          </p>
+          <section className="mb-6">
+            <p className="text-justify">
+              <strong>9. POLICY UPDATES.</strong>{" "}
+              This Privacy Policy may be updated from time to time.
+              Changes will be reflected on this page.
+            </p>
+          </section>
 
-          <a
-            href="mailto:YOUR_EMAIL@gmail.com"
-            className="mt-5 inline-flex max-w-full items-center gap-2 break-all rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#292929] shadow-sm transition hover:bg-[#fff4c2]"
-          >
-            <Mail size={18} />
-            YOUR_EMAIL@gmail.com
-          </a>
-        </section>
+          <section className="mb-8">
+            <p className="text-justify">
+              <strong>10. CONTACT US.</strong>{" "}
+              If you have any questions regarding this Privacy Policy,
+              contact us at:
+            </p>
 
-        {/* Footer */}
-        <footer className="mt-10 rounded-2xl bg-white px-5 py-8 text-center shadow-sm">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#fff4c2]">
-            <Heart size={24} className="text-[#A87900]" />
-          </div>
+            <a
+              href={`mailto:${email}`}
+              className="mt-2 inline-block break-all font-semibold text-blue-700 underline underline-offset-2"
+            >
+              {email}
+            </a>
+          </section>
 
-          <h3 className="mt-4 text-xl font-extrabold text-[#292929]">
-            Govinda Namalu
-          </h3>
+          <footer className="border-t border-gray-300 pt-5 text-center">
+            <p className="text-sm text-gray-600">
+              Effective Date: November 13, 2026
+            </p>
+            <p className="mt-3 pb-5 font-semibold">
+              Govinda Govinda 🙏
+            </p>
+          </footer>
 
-          <p className="mt-2 text-sm text-gray-600">
-            Thank you for being part of our devotional journey.
-          </p>
-
-          <p className="mt-4 text-xl font-bold text-[#A87900]">
-            గోవిందా! గోవిందా!
-          </p>
-
-          <p className="mt-5 border-t border-gray-100 pt-4 text-xs text-gray-500">
-            © 2026 Govinda Namalu. All rights reserved.
-          </p>
-        </footer>
+        </article>
       </div>
     </main>
   );

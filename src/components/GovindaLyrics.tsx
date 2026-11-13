@@ -1,16 +1,29 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  getFavorites,
+  toggleFavorite as toggleStoredFavorite,
+} from "../utils/libraryStorage";
 
 import {
   Menu,
   Play,
-  Home,
-  LayoutGrid,
   LockKeyhole,
   Heart,
   ArrowLeft,
+  BookHeart,
+  Sunrise,
+  ScrollText,
+  Music2,
+  AudioLines,
+  Sparkles,
+  BookOpenText,
+  Bird,
+  Flower2,
+  Image as ImageIcon,
 } from "lucide-react";
 
 import NowPlaying from "./NowPlaying";
+import Wallpapers from "./Wallpapers";
 
 // =========================================
 // GOVINDA NAMALU - TELUGU LYRICS
@@ -127,10 +140,8 @@ const names = [
   "శ్రీ వేంకటేశా గోవిందా",
 ];
 
-const chorus = "గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
-
 // =========================================
-// SONG TYPES
+// TYPES
 // =========================================
 
 type Song = {
@@ -148,6 +159,42 @@ type SongCategory =
   | "vishnu-sahasranamam"
   | "garuda-gamana"
   | "narayana-govinda";
+
+// =========================================
+// CATEGORY ICONS
+// =========================================
+
+const getCategoryIcon = (category: SongCategory) => {
+  const iconProps = {
+    size: 30,
+    strokeWidth: 2,
+  };
+
+  switch (category) {
+    case "govinda":
+      return <BookHeart {...iconProps} />;
+    case "suprabhatam":
+      return <Sunrise {...iconProps} />;
+    case "stotram":
+      return <ScrollText {...iconProps} />;
+    case "annamacharya":
+      return <Music2 {...iconProps} />;
+    case "ghantasala":
+      return <AudioLines {...iconProps} />;
+    case "om-namo":
+      return <Sparkles {...iconProps} />;
+    case "vishnu-sahasranamam":
+      return <BookOpenText {...iconProps} />;
+    case "garuda-gamana":
+      return <Bird {...iconProps} />;
+    case "narayana-govinda":
+      return <Flower2 {...iconProps} />;
+    default:
+      return <Music2 {...iconProps} />;
+  }
+};
+
+const chorus = "గోవిందా హరి గోవిందా గోకుల నందన గోవిందా";
 
 // =========================================
 // SONG CATEGORIES
@@ -214,7 +261,7 @@ const songCategories: {
       },
       {
         title: "Kondalalo Nelakonna",
-        src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna - SenSongsMp3.Co.mp3",
+        src: "/audio/Annamacharya-Keerthanalu/Kondalalo Nelakonna.mp3",
       },
       {
         title: "Nigama Nagamanta",
@@ -295,18 +342,7 @@ const songCategories: {
 ];
 
 // =========================================
-// APP CONFIGURATION
-// =========================================
-
-const MORE_APPS_URL =
-  "https://play.google.com/store/apps/developer?id=YOUR_DEVELOPER_ID";
-
-const FAVORITES_STORAGE_KEY = "govinda-namalu-favorites";
-
-// =========================================
 // LYRICS CARD CREATION
-// FIRST CARD: 4 NAMES
-// REMAINING CARDS: 2 NAMES
 // =========================================
 
 function createStanzas() {
@@ -336,12 +372,12 @@ interface GovindaLyricsProps {
 export default function GovindaLyrics({
   onPrivacyClick,
 }: GovindaLyricsProps) {
-  // Audio is managed here, not inside NowPlaying.
   const audioRef = useRef<HTMLAudioElement>(null);
   const playRequestRef = useRef(0);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [showWallpapers, setShowWallpapers] = useState(false);
   const [playerVisible, setPlayerVisible] = useState(false);
 
   const [activeCategory, setActiveCategory] =
@@ -358,14 +394,57 @@ export default function GovindaLyrics({
   const [muted, setMuted] = useState(false);
   const [requestId, setRequestId] = useState(0);
 
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem(FAVORITES_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
+  // =========================================
+  // AUDIO SONG FAVORITES
+  // =========================================
+
+  const [favorites, setFavorites] = useState<string[]>(() =>
+    getFavorites()
+  );
+
+  // =========================================
+  // WALLPAPER FAVORITES
+  // =========================================
+
+  const [wallpaperFavorites, setWallpaperFavorites] = useState<number[]>(
+    () => {
+      try {
+        const saved = localStorage.getItem(
+          "govinda_wallpaper_favorites"
+        );
+
+        const parsed: unknown = saved ? JSON.parse(saved) : [];
+
+        return Array.isArray(parsed)
+          ? parsed.filter(
+              (id): id is number =>
+                Number.isInteger(id) && id > 0
+            )
+          : [];
+      } catch {
+        return [];
+      }
     }
-  });
+  );
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "govinda_wallpaper_favorites",
+        JSON.stringify(wallpaperFavorites)
+      );
+    } catch (error) {
+      console.error("Unable to save wallpaper favorites:", error);
+    }
+  }, [wallpaperFavorites]);
+
+  const handleWallpaperFavorite = (id: number) => {
+    setWallpaperFavorites((previous) =>
+      previous.includes(id)
+        ? previous.filter((item) => item !== id)
+        : [...previous, id]
+    );
+  };
 
   const stanzas = createStanzas();
 
@@ -375,22 +454,29 @@ export default function GovindaLyrics({
 
   const currentSong = playerSongs[songIndex];
 
-  // Save favorites.
-  useEffect(() => {
-    try {
-      localStorage.setItem(
-        FAVORITES_STORAGE_KEY,
-        JSON.stringify(favorites)
-      );
-    } catch (error) {
-      console.error("Unable to save favorites:", error);
-    }
-  }, [favorites]);
+  // =========================================
+  // FAVORITE SONGS LIST
+  // =========================================
+
+  const favoriteSongs = songCategories.flatMap((category) =>
+    category.songs
+      .filter((song) => favorites.includes(song.src))
+      .map((song) => ({
+        ...song,
+        categoryId: category.id,
+        categoryTitle: category.title,
+      }))
+  );
+
+  const handleSongFavorite = () => {
+    if (!currentSong) return;
+
+    const updated = toggleStoredFavorite(currentSong.src);
+    setFavorites(updated);
+  };
 
   // =========================================
   // AUDIO PLAYBACK
-  // This effect only changes when a new song
-  // is selected. It does not depend on screens.
   // =========================================
 
   useEffect(() => {
@@ -438,24 +524,10 @@ export default function GovindaLyrics({
         });
       });
 
-    // Important:
-    // Do not pause audio in this effect's cleanup.
-    // Switching screens must not stop music.
+    // Keep audio playing when switching screens.
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestId]);
-
-  // =========================================
-  // FAVORITES
-  // =========================================
-
-  const toggleFavorite = (name: string) => {
-    setFavorites((previous) =>
-      previous.includes(name)
-        ? previous.filter((item) => item !== name)
-        : [...previous, name]
-    );
-  };
 
   // =========================================
   // SELECT CATEGORY
@@ -470,10 +542,9 @@ export default function GovindaLyrics({
 
     setActiveCategory(category);
     setShowFavorites(false);
+    setShowWallpapers(false);
     setMenuOpen(false);
 
-    // Govinda Namalu opens the lyrics screen.
-    // Existing background audio is not stopped.
     if (category === "govinda") {
       setPlayerVisible(false);
       return;
@@ -483,7 +554,6 @@ export default function GovindaLyrics({
     setSongIndex(0);
     setPlayerVisible(true);
 
-    // Request a new song.
     setRequestId((previous) => previous + 1);
   };
 
@@ -498,6 +568,7 @@ export default function GovindaLyrics({
     setSongIndex(index);
     setPlayerVisible(true);
     setShowFavorites(false);
+    setShowWallpapers(false);
     setMenuOpen(false);
 
     setRequestId((previous) => previous + 1);
@@ -587,10 +658,9 @@ export default function GovindaLyrics({
 
   const openFavorites = () => {
     setShowFavorites(true);
+    setShowWallpapers(false);
     setPlayerVisible(false);
     setMenuOpen(false);
-
-    // Do not pause audio here.
   };
 
   // =========================================
@@ -600,10 +670,9 @@ export default function GovindaLyrics({
   const openHome = () => {
     setActiveCategory("govinda");
     setShowFavorites(false);
+    setShowWallpapers(false);
     setPlayerVisible(false);
     setMenuOpen(false);
-
-    // Do not pause audio here.
   };
 
   // =========================================
@@ -636,13 +705,8 @@ export default function GovindaLyrics({
   // =========================================
 
   return (
-    <div className="relative min-h-screen w-full">
-
-      {/* =====================================
-          PERSISTENT AUDIO ELEMENT
-          Keep this outside NowPlaying.
-          Do not conditionally render this.
-      ===================================== */}
+    <div className="relative h-full w-full overflow-hidden">
+      {/* PERSISTENT AUDIO ELEMENT */}
 
       <audio
         ref={audioRef}
@@ -673,19 +737,24 @@ export default function GovindaLyrics({
         }}
       />
 
-      {/* =====================================
-          PLAYER OR LYRICS SCREEN
-      ===================================== */}
+      {/* WALLPAPERS / PLAYER / LYRICS */}
 
-      {playerVisible && currentSong ? (
+      {showWallpapers ? (
+        <Wallpapers
+          onBack={() => setShowWallpapers(false)}
+          favorites={wallpaperFavorites}
+          onToggleFavorite={handleWallpaperFavorite}
+        />
+      ) : playerVisible && currentSong ? (
         <NowPlaying
           songs={playerSongs}
           songIndex={songIndex}
-          
           playing={playing}
           currentTime={currentTime}
           duration={duration}
           muted={muted}
+          isFavorite={favorites.includes(currentSong.src)}
+          onToggleFavorite={handleSongFavorite}
           onBack={() => setMenuOpen(true)}
           onTogglePlay={togglePlay}
           onChangeSong={changeSong}
@@ -694,7 +763,6 @@ export default function GovindaLyrics({
         />
       ) : (
         <main className="govinda-app">
-
           {/* HEADER */}
 
           <header className="app-header">
@@ -733,31 +801,131 @@ export default function GovindaLyrics({
             ) : null}
           </header>
 
-          {/* =================================
-              LYRICS AND FAVORITES
-          ================================= */}
+          {/* LYRICS AND FAVORITES */}
 
           <section className="lyrics-list">
-
             {showFavorites ? (
-              favorites.length ? (
-                favorites.map((name) => (
-                  <article className="lyrics-card" key={name}>
-                    <p className="names-lines">
-                      <span>{name}</span>
+              favoriteSongs.length > 0 ||
+              wallpaperFavorites.length > 0 ? (
+                <>
+                  {/* FAVORITE AUDIO SONGS */}
 
-                      <button
-                        className="favorite-button active"
-                        onClick={() => toggleFavorite(name)}
-                        aria-label={`Remove ${name} from favorites`}
-                      >
-                        <Heart size={23} fill="currentColor" />
-                      </button>
-                    </p>
+                  {favoriteSongs.map((song) => (
+                    <article
+                      className="lyrics-card"
+                      key={song.src}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <h2 className="font-semibold">
+                            {song.title}
+                          </h2>
 
-                    <p className="chorus-line">{chorus}</p>
-                  </article>
-                ))
+                          <p className="text-sm opacity-70">
+                            {song.categoryTitle}
+                          </p>
+                        </div>
+
+                        <button
+                          className="favorite-button active"
+                          onClick={() => {
+                            const updated = toggleStoredFavorite(
+                              song.src
+                            );
+
+                            setFavorites(updated);
+                          }}
+                          aria-label={`Remove ${song.title} from favorites`}
+                          title="Remove from Favorites"
+                        >
+                          <Heart
+                            size={23}
+                            fill="currentColor"
+                          />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            const category = songCategories.find(
+                              (item) =>
+                                item.id === song.categoryId
+                            );
+
+                            if (!category) return;
+
+                            const index = category.songs.findIndex(
+                              (item) => item.src === song.src
+                            );
+
+                            openSongPlayer(category.songs, index);
+                          }}
+                          aria-label={`Play ${song.title}`}
+                          title="Play song"
+                        >
+                          <Play
+                            size={24}
+                            fill="currentColor"
+                          />
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+
+                  {/* FAVORITE WALLPAPERS */}
+
+                  {wallpaperFavorites.map((id) => (
+                    <article
+                      className="lyrics-card"
+                      key={`wallpaper-${id}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={`/images/wallpapers/balaji-${id}.png`}
+                          alt={`Balaji Wallpaper ${id}`}
+                          className="h-24 w-16 rounded-lg object-cover"
+                          loading="lazy"
+                        />
+
+                        <div className="min-w-0 flex-1">
+                          <h2 className="font-semibold">
+                            Balaji Wallpaper {id}
+                          </h2>
+
+                          <p className="text-sm opacity-70">
+                            Sri Venkateswara Swamy Wallpaper
+                          </p>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowFavorites(false);
+                              setShowWallpapers(true);
+                              setMenuOpen(false);
+                            }}
+                            className="mt-2 text-sm font-semibold text-[#00796f]"
+                          >
+                            Open Wallpapers
+                          </button>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="favorite-button active"
+                          onClick={() =>
+                            handleWallpaperFavorite(id)
+                          }
+                          aria-label={`Remove wallpaper ${id} from favorites`}
+                          title="Remove from Favorites"
+                        >
+                          <Heart
+                            size={23}
+                            fill="currentColor"
+                          />
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </>
               ) : (
                 <div className="empty-favorites">
                   <Heart size={55} />
@@ -765,30 +933,37 @@ export default function GovindaLyrics({
                   <h2>No Favorites Yet</h2>
 
                   <p>
-                    No favorite Govinda Namalu have been saved yet.
+                    Tap the heart on a song or wallpaper to save it here.
                   </p>
 
                   <button onClick={openHome}>
-                    Explore Govinda Namalu
+                    Explore Songs
                   </button>
                 </div>
               )
             ) : activeCategory === "govinda" ? (
               stanzas.map((stanza, index) => (
-                <article className="lyrics-card" key={index}>
+                <article
+                  className="lyrics-card"
+                  key={index}
+                >
                   <p className="names-lines">
-  {stanza.map((name, nameIndex) => (
-    <span key={nameIndex} className="namalu-item">
-      {name}
-    </span>
-  ))}
-</p>
+                    {stanza.map((name, nameIndex) => (
+                      <span
+                        key={nameIndex}
+                        className="namalu-item"
+                      >
+                        {name}
+                      </span>
+                    ))}
+                  </p>
 
-                  <p className="chorus-line">{chorus}</p>
+                  <p className="chorus-line">
+                    {chorus}
+                  </p>
                 </article>
               ))
             ) : null}
-
           </section>
 
           <div className="android-navigation">
@@ -797,11 +972,7 @@ export default function GovindaLyrics({
         </main>
       )}
 
-      {/* =====================================
-          NAVIGATION DRAWER
-          Opens over the player.
-          Does not unmount or pause audio.
-      ===================================== */}
+      {/* NAVIGATION DRAWER */}
 
       {menuOpen && (
         <div
@@ -818,7 +989,6 @@ export default function GovindaLyrics({
           />
 
           <aside className="navigation-drawer">
-
             <div className="drawer-banner">
               <img
                 src="/images/venkateswara-banner.jpg"
@@ -827,23 +997,26 @@ export default function GovindaLyrics({
             </div>
 
             <nav className="drawer-menu">
-
               {songCategories.map((category) => (
                 <button
                   key={category.id}
                   className={`drawer-item ${
                     !showFavorites &&
+                    !showWallpapers &&
                     activeCategory === category.id
                       ? "selected"
                       : ""
                   }`}
-                  onClick={() => selectCategory(category.id)}
+                  onClick={() =>
+                    selectCategory(category.id)
+                  }
                 >
-                  <Home size={30} />
-
+                  {getCategoryIcon(category.id)}
                   <span>{category.title}</span>
                 </button>
               ))}
+
+              {/* MY FAVORITES */}
 
               <button
                 className={`drawer-item ${
@@ -853,17 +1026,29 @@ export default function GovindaLyrics({
               >
                 <Heart size={30} />
 
-                <span>My Favorites ({favorites.length})</span>
+                <span>
+                  My Favorites (
+                  {favorites.length + wallpaperFavorites.length})
+                </span>
               </button>
+
+              {/* WALLPAPERS */}
 
               <button
-                className="drawer-item"
-                onClick={() => openPage(MORE_APPS_URL)}
+                className={`drawer-item ${
+                  showWallpapers ? "selected" : ""
+                }`}
+                onClick={() => {
+                  setShowWallpapers(true);
+                  setShowFavorites(false);
+                  setMenuOpen(false);
+                }}
               >
-                <LayoutGrid size={30} />
-
-                <span>More Apps</span>
+                <ImageIcon size={30} />
+                <span>Wallpapers</span>
               </button>
+
+              {/* PRIVACY POLICY */}
 
               <button
                 className="drawer-item"
@@ -873,9 +1058,10 @@ export default function GovindaLyrics({
                 }}
               >
                 <LockKeyhole size={30} />
-
                 <span>Privacy Policy</span>
               </button>
+
+              {/* RETURN TO PLAYER */}
 
               {playerVisible && (
                 <button
@@ -883,11 +1069,9 @@ export default function GovindaLyrics({
                   onClick={() => setMenuOpen(false)}
                 >
                   <Play size={30} />
-
                   <span>Return to Now Playing</span>
                 </button>
               )}
-
             </nav>
           </aside>
         </div>
