@@ -679,15 +679,7 @@ export default function GovindaLyrics({
   // OPEN EXTERNAL PAGE
   // =========================================
 
-  const openPage = (url: string) => {
-    if (!url || url.includes("YOUR_") || url.includes("your-")) {
-      alert("Please configure this link first.");
-      return;
-    }
-
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
-
+  
   // =========================================
   // WHEN SONG ENDS
   // =========================================
